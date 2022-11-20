@@ -17,31 +17,58 @@
         <div class="bars">
             <div class="barsbox">
                 <img class="headImage" src="../assets/images/index_logo.png">
-                <span class="barsText">首页</span>
-                <span class="barsText">居家</span>
-                <span class="barsText">美食</span>
-                <span class="barsText">服饰</span>
-                <span class="barsText">母婴</span>
-                <span class="barsText">个护</span>
-                <span class="barsText">严选</span>
-                <span class="barsText">数码</span>
-                <span class="barsText">运动</span>
-                <span class="barsText">杂项</span>
+                <div class="textbox">
+                    <span class="barsText">首页</span>
+                    <span class="barsText">居家</span>
+                    <span class="barsText">美食</span>
+                    <span class="barsText">服饰</span>
+                    <span class="barsText">母婴</span>
+                    <span class="barsText">个护</span>
+                    <span class="barsText">严选</span>
+                    <span class="barsText">数码</span>
+                    <span class="barsText">运动</span>
+                    <span class="barsText">杂项</span>
+                </div>
+                <div class="searchbox">
+                    <span class="iconfont icon-fangdajing searchLogo"></span>
+                    <input type="text" class="searchInput" v-model="keyword" placeholder="搜一搜">
+                </div>
+                <div class="cartbox">
+                    <span class="iconfont icon-gouwuche cartLogo"></span>
+                    <div class="cartNum">
+                        <span>1</span>
+                    </div>
+                </div>
             </div>
         </div>
+        <swiper :width="1240" :height="500" :imageArray="imageArray"></swiper>
     </div>
 </template>
 
 <script lang="ts">
     import { useRouter } from 'vue-router';
+    import swiper from '../components/swiper.vue';
+    import { ref } from 'vue'
     export default {
         data(){
             return {
-
+                imageArray: [
+                    '@/assets/images/index/banner1.jpg',
+                    '@/assets/images/index/banner2.jpg',
+                    '@/assets/images/index/banner3.jpg',
+                    '@/assets/images/index/banner4.jpg',
+                    '@/assets/images/index/banner5.jpg'
+                ]
             }
         },
+        components: {
+            swiper
+        },
         setup(){
-            
+            let keyword = ref('')
+            return {
+                keyword
+            }
         }
     }
 </script>
@@ -51,6 +78,7 @@
         width: 100vw;
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
     /* 顶部标题 */
     .head {
@@ -95,7 +123,6 @@
     .barsbox {
         width: 1240px;
         height: 132px;
-        border: 1px solid red;
         display: flex;
         align-items: center;
     }
@@ -103,10 +130,64 @@
         width: 200px;
         height: 132px;
     }
+    .textbox {
+        width: 820px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
     .barsText {
         font-size: 16px;
         line-height: 32px;
         color: #333333;
         cursor: pointer;
+    }
+    .barsText:hover {
+        color: #27ba9b;
+        border-bottom: 1px solid #27ba9b;
+    }
+    .searchbox {
+        width: 170px;
+        height: 32px;
+        border-bottom: 1px solid #e7e7e7;
+        display: flex;
+        align-items: center;
+    }
+    .searchInput {
+        border: none;
+        outline: none;
+    }
+    .searchInput::placeholder {
+        color: #cccccc;
+    }
+    .searchLogo {
+        font-size: 18px;
+    }
+    .cartbox {
+        position: relative;
+        width: 50px;
+        height: 32px;
+        display: flex;
+        align-items: flex-end;
+        cursor: pointer;
+    }
+    .cartLogo {
+        font-size: 24px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    .cartNum {
+        width: 20px;
+        height: 16px;
+        background-color: #ef6237;
+        border-radius: 100px;
+        color: #ffffff;
+        font-size: 12px;
+        position: absolute;
+        top: 0;
+        right: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
