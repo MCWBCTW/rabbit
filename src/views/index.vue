@@ -40,37 +40,23 @@
                     </div>
                 </div>
             </div>
+            <div class="linebox"></div>
         </div>
-        <swiper :width="1240" :height="500" :imageArray="imageArray"></swiper>
+        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray"></swiper>
     </div>
 </template>
 
-<script lang="ts">
-    import { useRouter } from 'vue-router';
+<script setup lang="ts">
     import swiper from '../components/swiper.vue';
-    import { ref } from 'vue'
-    export default {
-        data(){
-            return {
-                imageArray: [
-                    '@/assets/images/index/banner1.jpg',
-                    '@/assets/images/index/banner2.jpg',
-                    '@/assets/images/index/banner3.jpg',
-                    '@/assets/images/index/banner4.jpg',
-                    '@/assets/images/index/banner5.jpg'
-                ]
-            }
-        },
-        components: {
-            swiper
-        },
-        setup(){
-            let keyword = ref('')
-            return {
-                keyword
-            }
-        }
-    }
+    import { reactive, ref } from 'vue';
+    const imageArray:Array<string> = reactive([
+        'src/assets/images/index/banner1.jpg',
+        'src/assets/images/index/banner2.jpg',
+        'src/assets/images/index/banner3.jpg',
+        'src/assets/images/index/banner4.jpg',
+        'src/assets/images/index/banner5.jpg'
+    ]);
+    let keyword = ref('');
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
@@ -125,10 +111,12 @@
         height: 132px;
         display: flex;
         align-items: center;
+        position: relative;
     }
     .headImage {
         width: 200px;
         height: 132px;
+        cursor: pointer;
     }
     .textbox {
         width: 820px;
@@ -189,5 +177,13 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .linebox {
+        width: 1240px;
+        height: 100px;
+        position: absolute;
+        top: 150px;
+        z-index: 99;
+        border: 1px solid red;
     }
 </style>
