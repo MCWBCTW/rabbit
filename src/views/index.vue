@@ -19,15 +19,15 @@
                 <img class="headImage" src="../assets/images/index_logo.png">
                 <div class="textbox">
                     <span class="barsText">首页</span>
-                    <span class="barsText">居家</span>
-                    <span class="barsText">美食</span>
-                    <span class="barsText">服饰</span>
-                    <span class="barsText">母婴</span>
-                    <span class="barsText">个护</span>
-                    <span class="barsText">严选</span>
-                    <span class="barsText">数码</span>
-                    <span class="barsText">运动</span>
-                    <span class="barsText">杂项</span>
+                    <span class="barsText" @mouseenter="mouseEnter(1)" @mouseleave="mouseLeave">居家</span>
+                    <span class="barsText" @mouseenter="mouseEnter(2)" @mouseleave="mouseLeave">美食</span>
+                    <span class="barsText" @mouseenter="mouseEnter(3)" @mouseleave="mouseLeave">服饰</span>
+                    <span class="barsText" @mouseenter="mouseEnter(4)" @mouseleave="mouseLeave">母婴</span>
+                    <span class="barsText" @mouseenter="mouseEnter(5)" @mouseleave="mouseLeave">个护</span>
+                    <span class="barsText" @mouseenter="mouseEnter(6)" @mouseleave="mouseLeave">严选</span>
+                    <span class="barsText" @mouseenter="mouseEnter(7)" @mouseleave="mouseLeave">数码</span>
+                    <span class="barsText" @mouseenter="mouseEnter(8)" @mouseleave="mouseLeave">运动</span>
+                    <span class="barsText" @mouseenter="mouseEnter(9)" @mouseleave="mouseLeave">杂项</span>
                 </div>
                 <div class="searchbox">
                     <span class="iconfont icon-fangdajing searchLogo"></span>
@@ -40,9 +40,18 @@
                     </div>
                 </div>
             </div>
-            <div class="linebox"></div>
+            <div class="linebox" :class="isHover ? 'hei-100' : 'hei-0'"></div>
         </div>
         <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray"></swiper>
+        <div class="coverbox">
+            <div class="menu">
+                <div class="menu-line">
+                    <span class="fs-16">居家</span>
+                    <span class="fs-14">茶咖酒具</span>
+                    <span class="fs-14">水具杯壶</span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -57,6 +66,19 @@
         'src/assets/images/index/banner5.jpg'
     ]);
     let keyword = ref('');
+
+    let hoverIndex:any = ref(-1); // 当前移入的横栏项下标
+    let isHover:any = ref(false); // 横栏移入状态
+    // 鼠标进入横栏项
+    function mouseEnter(index:number){
+        hoverIndex.value = index;
+        isHover.value = true;
+    }
+    // 鼠标移出横栏项
+    function mouseLeave(){
+        hoverIndex.value = -1;
+        isHover.value = false;
+    }
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
@@ -180,10 +202,52 @@
     }
     .linebox {
         width: 1240px;
-        height: 100px;
         position: absolute;
         top: 150px;
         z-index: 99;
-        border: 1px solid red;
+        transition: height .2s linear;
+        box-shadow: 0 0 5px #cccccc;
+        background-color: #ffffff;
+    }
+    .hei-100 {
+        height: 100px;
+    }
+    .hei-0 {
+        height: 0px;
+    }
+    .coverbox {
+        width: 1240px;
+        height: 500px;
+        position: absolute;
+        top: 185px;
+    }
+    .menu {
+        width: 250px;
+        height: 500px;
+        background-color: rgba(0, 0, 0, .7);
+    }
+    .menu-line {
+        width: 250px;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 40px;
+        box-sizing: border-box;
+    }
+    .menu-line:hover {
+        background-color: #27ba9b;
+    }
+    .menu-line span {
+        color: #ffffff;
+        margin-right: 4px;
+    }
+
+
+    .fs-16 {
+        font-size: 16px;
+    }
+    .fs-14 {
+        font-size: 14px;
     }
 </style>

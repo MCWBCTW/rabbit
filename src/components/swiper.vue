@@ -13,6 +13,7 @@
         </div>
     </div>
     <div class="swiper" v-else></div>
+    <slot></slot>
 </template>
 
 <script lang="ts" setup>
