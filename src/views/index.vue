@@ -42,22 +42,24 @@
             </div>
             <div class="linebox" :class="isHover ? 'hei-100' : 'hei-0'"></div>
         </div>
-        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray"></swiper>
         <div class="coverbox">
             <div class="menu">
-                <div class="menu-line">
-                    <span class="fs-16">居家</span>
-                    <span class="fs-14">茶咖酒具</span>
-                    <span class="fs-14">水具杯壶</span>
+                <div class="menu-line" v-for="(item, index) in menuArray" :key="index">
+                    <span class="fs-16">{{item.title}}</span>
+                    <span class="fs-14">{{item.subtitle_1}}</span>
+                    <span class="fs-14">{{item.subtitle_2}}</span>
                 </div>
             </div>
+            <div class="menu-con"></div>
         </div>
+        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray"></swiper>
     </div>
 </template>
 
 <script setup lang="ts">
     import swiper from '../components/swiper.vue';
     import { reactive, ref } from 'vue';
+    // banner图片地址
     const imageArray:Array<string> = reactive([
         'src/assets/images/index/banner1.jpg',
         'src/assets/images/index/banner2.jpg',
@@ -65,6 +67,45 @@
         'src/assets/images/index/banner4.jpg',
         'src/assets/images/index/banner5.jpg'
     ]);
+    // 声明菜单栏内容接口
+    interface Imenu {
+        title: string;
+        subtitle_1: string;
+        subtitle_2: string;
+    }
+    // 菜单栏内容
+    const menuArray:Array<Imenu> = reactive([
+        {
+            title: '居家', subtitle_1: '茶咖酒具', subtitle_2: '水具杯壶'
+        },
+        {
+            title: '美食', subtitle_1: '网易黑猪', subtitle_2: '水产海鲜'
+        },
+        {
+            title: '服饰', subtitle_1: '室外拖鞋', subtitle_2: '春夏潮鞋'
+        },
+        {
+            title: '母婴', subtitle_1: 'T恤/polo/衬衫', subtitle_2: '卫衣/毛衫'
+        },
+        {
+            title: '个护', subtitle_1: '家庭清洁', subtitle_2: '浴室用品'
+        },
+        {
+            title: '严选', subtitle_1: '卫浴用品', subtitle_2: '高级珠宝'
+        },
+        {
+            title: '数码', subtitle_1: '影音娱乐', subtitle_2: '乐器'
+        },
+        {
+            title: '运动', subtitle_1: '登机箱', subtitle_2: '托运箱'
+        },
+        {
+            title: '杂项', subtitle_1: '乐器杂项', subtitle_2: ''
+        },
+        {
+            title: '品牌', subtitle_1: '品牌推荐', subtitle_2: ''
+        }
+    ])
     let keyword = ref('');
 
     let hoverIndex:any = ref(-1); // 当前移入的横栏项下标
@@ -87,6 +128,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        user-select: none;
     }
     /* 顶部标题 */
     .head {
@@ -219,7 +261,9 @@
         width: 1240px;
         height: 500px;
         position: absolute;
+        display: flex;
         top: 185px;
+        z-index: 98;
     }
     .menu {
         width: 250px;
@@ -242,7 +286,12 @@
         color: #ffffff;
         margin-right: 4px;
     }
-
+    .menu-con {
+        width: 990px;
+        height: 500px;
+        display: none;
+        background-color: #27ba9b;
+    }
 
     .fs-16 {
         font-size: 16px;

@@ -1,6 +1,6 @@
 <template>
     <div class="swiper" v-if="!level" :style="{width: `${width}px`, height: `${height}px`}" @mouseenter="mouseEnter" @mouseleave="mouseOut">
-        <img :class="imageShowIndex == index ? 'tran op-1' : 'op-0'" v-for="(item, index) in imageArray" :key="index" :src="item"
+        <img :class="imageShowIndex == Number(index) ? 'tran op-1' : 'op-0'" v-for="(item, index) in imageArray" :key="index" :src="item"
          :style="{width: `${width}px`, height: `${height}px`}">
         <div class="btnbox" v-show="isHover" :style="{left: `${leftLeft}px`, top: `${btnTop}px`}" @click="bannerReduce">
             <span class="iconfont icon-xiangzuo1"></span>
@@ -9,7 +9,7 @@
             <span class="iconfont icon-xiangyou"></span>
         </div>
         <div class="linebtn">
-            <div :class="imageShowIndex == index ? 'white' : 'grey'"  v-for="(item, index) in imageArray" :key="index" @click="choiceBanner(Number(index))"></div>
+            <div :class="imageShowIndex == Number(index) ? 'white' : 'grey'"  v-for="(item, index) in imageArray" :key="index" @click="choiceBanner(Number(index))"></div>
         </div>
     </div>
     <div class="swiper" v-else></div>
@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
     import { defineComponent, onMounted, ref } from 'vue'
+    import type { Ref } from 'vue'
     const props = defineProps({
         // 轮播图宽度
         width: {
@@ -56,7 +57,7 @@
         }
     })
     let timer:any = ref(null);
-    let imageShowIndex:any = ref(0);
+    let imageShowIndex:Ref<number> = ref(0);
     let isHover:any = ref(false)
 
     // 循环，切换banner图片
@@ -125,6 +126,7 @@
         display: flex;
         justify-content: center;
         align-items: flex-end;
+        z-index: 97;
     }
     .swiper img {
         position: absolute;
