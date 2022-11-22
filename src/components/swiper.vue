@@ -13,12 +13,15 @@
         </div>
     </div>
     <div class="swiper" v-else></div>
-    <slot></slot>
+    <button>子组件方法</button>
 </template>
 
 <script lang="ts" setup>
     import { defineComponent, onMounted, ref } from 'vue'
     import type { Ref } from 'vue'
+    onMounted(() => {
+        loopFun();
+    })
     const props = defineProps({
         // 轮播图宽度
         width: {
@@ -56,9 +59,12 @@
             default: 0,
         }
     })
+    // 声明循环函数的返回值
     let timer:any = ref(null);
+    // 声明当前显示的图片下标
     let imageShowIndex:Ref<number> = ref(0);
-    let isHover:any = ref(false)
+    // 声明鼠标是否移入图片标志
+    let isHover:Ref<boolean> = ref(false)
 
     // 循环，切换banner图片
     function loopFun(){
@@ -113,9 +119,13 @@
     function choiceBanner(index:number){
         imageShowIndex.value = index;
     }
-    onMounted(() => {
-        loopFun();
-    })
+    
+    // 暴露方法测试
+    function exportFun(){
+        console.log('子组件方法');
+    }
+    defineExpose({exportFun})
+
 </script>
 
 <style>

@@ -52,7 +52,8 @@
             </div>
             <div class="menu-con"></div>
         </div>
-        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray"></swiper>
+        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray" ref="swiperCom"></swiper>
+        <button @click="test">事件测试</button>
     </div>
 </template>
 
@@ -120,6 +121,15 @@
         hoverIndex.value = -1;
         isHover.value = false;
     }
+
+    // 子组件
+    const swiperCom = ref();
+    // 测试事件
+    function test(){
+        console.log('父组件方法')
+        swiperCom.value.exportFun()
+    }
+
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
