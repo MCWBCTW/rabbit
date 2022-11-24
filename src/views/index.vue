@@ -42,24 +42,32 @@
             </div>
             <div class="linebox" :class="isHover ? 'hei-100' : 'hei-0'"></div>
         </div>
-        <div class="coverbox">
-            <div class="menu">
-                <div class="menu-line" v-for="(item, index) in menuArray" :key="index">
-                    <span class="fs-16">{{item.title}}</span>
-                    <span class="fs-14">{{item.subtitle_1}}</span>
-                    <span class="fs-14">{{item.subtitle_2}}</span>
+        <div class="swiperbox">
+            <div class="coverbox" @mouseleave="menuBoxMouseOut">
+                <div class="menu">
+                    <div class="menu-line" :style="{backgroundColor: `${activeMenuLine == index ? '#27ba9b' : 'transparent'}`}" 
+                        v-for="(item, index) in menuArray" :key="index" @mouseenter="menuLineMouseEnter(index)">
+                        <span class="fs-16">{{item.title}}</span>
+                        <span class="fs-14">{{item.subtitle_1}}</span>
+                        <span class="fs-14">{{item.subtitle_2}}</span>
+                    </div>
+                </div>
+                <div class="menu-con" :style="{display: `${activeMenuLine != -1 ? 'block' : 'none'}`}">
+                    <div class="menu-con">
+                        
+                    </div>
                 </div>
             </div>
-            <div class="menu-con"></div>
+            <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray" ref="swiperCom"></swiper>
         </div>
-        <swiper :width="1240" :height="500" :leftLeft="250" :btnTop="225" :imageArray="imageArray" ref="swiperCom"></swiper>
-        <button @click="test">事件测试</button>
+        
     </div>
 </template>
 
 <script setup lang="ts">
     import swiper from '../components/swiper.vue';
     import { reactive, ref } from 'vue';
+    import type { Ref } from 'vue'
     // banner图片地址
     const imageArray:Array<string> = reactive([
         'src/assets/images/index/banner1.jpg',
@@ -109,8 +117,8 @@
     ])
     let keyword = ref('');
 
-    let hoverIndex:any = ref(-1); // 当前移入的横栏项下标
-    let isHover:any = ref(false); // 横栏移入状态
+    let hoverIndex:Ref<number> = ref(-1); // 当前移入的横栏项下标
+    let isHover:Ref<boolean> = ref(false); // 横栏移入状态
     // 鼠标进入横栏项
     function mouseEnter(index:number){
         hoverIndex.value = index;
@@ -122,14 +130,16 @@
         isHover.value = false;
     }
 
-    // 子组件
-    const swiperCom = ref();
-    // 测试事件
-    function test(){
-        console.log('父组件方法')
-        swiperCom.value.exportFun()
+    let activeMenuLine:Ref<number> = ref(1);
+    // 鼠标移入菜单栏列表，与之下标匹配项背景色修改
+    function menuLineMouseEnter(index: number){
+        activeMenuLine.value = index;
     }
 
+    // 鼠标移出整体菜单栏
+    function menuBoxMouseOut(e:any){
+        activeMenuLine.value = -1;
+    }
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
@@ -267,12 +277,15 @@
     .hei-0 {
         height: 0px;
     }
+    .swiperbox {
+        position: relative;
+    }
     .coverbox {
-        width: 1240px;
+        width: 250px;
         height: 500px;
         position: absolute;
         display: flex;
-        top: 185px;
+        top: 0;
         z-index: 98;
     }
     .menu {
@@ -289,9 +302,6 @@
         padding-left: 40px;
         box-sizing: border-box;
     }
-    .menu-line:hover {
-        background-color: #27ba9b;
-    }
     .menu-line span {
         color: #ffffff;
         margin-right: 4px;
@@ -299,8 +309,7 @@
     .menu-con {
         width: 990px;
         height: 500px;
-        display: none;
-        background-color: #27ba9b;
+        background-color: rgba(256, 256, 256, .5);
     }
 
     .fs-16 {

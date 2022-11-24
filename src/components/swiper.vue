@@ -13,7 +13,6 @@
         </div>
     </div>
     <div class="swiper" v-else></div>
-    <button>子组件方法</button>
 </template>
 
 <script lang="ts" setup>
@@ -120,12 +119,6 @@
         imageShowIndex.value = index;
     }
     
-    // 暴露方法测试
-    function exportFun(){
-        console.log('子组件方法');
-    }
-    defineExpose({exportFun})
-
 </script>
 
 <style>
