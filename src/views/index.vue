@@ -19,15 +19,15 @@
                 <img class="headImage" src="../assets/images/index_logo.png">
                 <div class="textbox">
                     <span class="barsText">首页</span>
-                    <span class="barsText" @mouseenter="mouseEnter(1)" @mouseleave="mouseLeave">居家</span>
-                    <span class="barsText" @mouseenter="mouseEnter(2)" @mouseleave="mouseLeave">美食</span>
-                    <span class="barsText" @mouseenter="mouseEnter(3)" @mouseleave="mouseLeave">服饰</span>
-                    <span class="barsText" @mouseenter="mouseEnter(4)" @mouseleave="mouseLeave">母婴</span>
-                    <span class="barsText" @mouseenter="mouseEnter(5)" @mouseleave="mouseLeave">个护</span>
-                    <span class="barsText" @mouseenter="mouseEnter(6)" @mouseleave="mouseLeave">严选</span>
-                    <span class="barsText" @mouseenter="mouseEnter(7)" @mouseleave="mouseLeave">数码</span>
-                    <span class="barsText" @mouseenter="mouseEnter(8)" @mouseleave="mouseLeave">运动</span>
-                    <span class="barsText" @mouseenter="mouseEnter(9)" @mouseleave="mouseLeave">杂项</span>
+                    <span class="barsText" @mouseenter="mouseEnter(1)" @mouseleave="mouseLeave(1)">居家</span>
+                    <span class="barsText" @mouseenter="mouseEnter(2)" @mouseleave="mouseLeave(2)">美食</span>
+                    <span class="barsText" @mouseenter="mouseEnter(3)" @mouseleave="mouseLeave(3)">服饰</span>
+                    <span class="barsText" @mouseenter="mouseEnter(4)" @mouseleave="mouseLeave(4)">母婴</span>
+                    <span class="barsText" @mouseenter="mouseEnter(5)" @mouseleave="mouseLeave(5)">个护</span>
+                    <span class="barsText" @mouseenter="mouseEnter(6)" @mouseleave="mouseLeave(6)">严选</span>
+                    <span class="barsText" @mouseenter="mouseEnter(7)" @mouseleave="mouseLeave(7)">数码</span>
+                    <span class="barsText" @mouseenter="mouseEnter(8)" @mouseleave="mouseLeave(8)">运动</span>
+                    <span class="barsText" @mouseenter="mouseEnter(9)" @mouseleave="mouseLeave(9)">杂项</span>
                 </div>
                 <div class="searchbox">
                     <span class="iconfont icon-fangdajing searchLogo"></span>
@@ -40,7 +40,12 @@
                     </div>
                 </div>
             </div>
-            <div class="linebox" :class="isHover ? 'hei-100' : 'hei-0'"></div>
+            <div class="linebox" :class="isHover ? 'hei-150' : 'hei-0'" @mouseenter="lineMouseEnter" @mouseleave="lineMouseLeave">
+                <div class="linebox-item" v-for="(item, index) in barsImageArray[hoverIndex-1]" :key="index">
+                    <img :src="item.image">
+                    <span>{{ item.title }}</span>
+                </div>
+            </div>
         </div>
         <div class="swiperbox">
             <div class="coverbox" @mouseleave="menuBoxMouseOut">
@@ -60,16 +65,30 @@
             </div>
             <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray" ref="swiperCom"></swiper>
         </div>
-        
     </div>
 </template>
 
 <script setup lang="ts">
+    import { getIndexData } from '../api/api-index';
     import swiper from '../components/swiper.vue';
-    import { reactive, ref } from 'vue';
+    import { onMounted, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
+
+    // 基本reactive数据接口
+    interface Iract {
+        data: Array<any>
+    }
+
+    // 横栏项
+    interface Icross {
+        title: string;
+        id: number
+    }
+    // 横栏项内容
+    let crossBarArray:Iract = reactive({data: []});
+
     // banner图片地址
-    const imageArray:Array<string> = reactive([
+    let imageArray:Array<string> = reactive([
         'src/assets/images/index/banner1.jpg',
         'src/assets/images/index/banner2.jpg',
         'src/assets/images/index/banner3.jpg',
@@ -83,7 +102,7 @@
         subtitle_2: string;
     }
     // 菜单栏内容
-    const menuArray:Array<Imenu> = reactive([
+    let menuArray:Array<Imenu> = reactive([
         {
             title: '居家', subtitle_1: '茶咖酒具', subtitle_2: '水具杯壶'
         },
@@ -119,15 +138,185 @@
 
     let hoverIndex:Ref<number> = ref(-1); // 当前移入的横栏项下标
     let isHover:Ref<boolean> = ref(false); // 横栏移入状态
+    let outIndex:Ref<number> = ref(-1); // 当前移出横栏项的下标，在横栏弹窗鼠标移入时使用
+    interface Ibars {
+        image: string;
+        title: string;
+    }
+    let aaa: Array<Array<Ibars>> = reactive([]);
+    let barsImageArray: Array<Array<Ibars>> = [
+        [
+            {
+                title: '茶咖酒具',
+                image: '/src/assets/images/index/茶咖酒具.png',
+            },
+            {
+                title: '水具杯壶',
+                image: '/src/assets/images/index/水具杯壶.png',
+            },
+            {
+                title: '宠物食品',
+                image: '/src/assets/images/index/宠物食品.png',
+            },
+            {
+                title: '宠物用品',
+                image: '/src/assets/images/index/宠物用品.png',
+            }
+        ],
+        [
+            {
+                title: '网易黑猪',
+                image: '/src/assets/images/index/网易黑猪.png',
+            },
+            {
+                title: '水产海鲜',
+                image: '/src/assets/images/index/水产海鲜.png',
+            },
+            {
+                title: '全球美食',
+                image: '/src/assets/images/index/全球美食.png',
+            },
+            {
+                title: '冷冻冷藏',
+                image: '/src/assets/images/index/冷冻冷藏.png',
+            }
+        ],
+        [
+            {
+                title: '室外拖鞋',
+                image: '/src/assets/images/index/室外拖鞋.png',
+            },
+            {
+                title: '春夏潮鞋',
+                image: '/src/assets/images/index/春夏潮鞋.png',
+            },
+            {
+                title: '飞织系列',
+                image: '/src/assets/images/index/飞织系列.png',
+            },
+            {
+                title: '一脚蹬懒人系列',
+                image: '/src/assets/images/index/一脚蹬懒人系列.png',
+            }
+        ],
+        [
+            {
+                title: 'T恤/polo/衬衫',
+                image: '/src/assets/images/index/T恤polo衬衫.png',
+            },
+            {
+                title: '卫衣/毛衫',
+                image: '/src/assets/images/index/卫衣毛衫.png',
+            },
+            {
+                title: '外套/套装',
+                image: '/src/assets/images/index/外套套装.png',
+            },
+            {
+                title: '连体衣/礼盒',
+                image: '/src/assets/images/index/连体衣礼盒.png',
+            }
+        ],
+        [
+            {
+                title: '家庭清洁',
+                image: '/src/assets/images/index/家庭清洁.png',
+            },
+            {
+                title: '浴室用品',
+                image: '/src/assets/images/index/浴室用品.png',
+            },
+            {
+                title: '餐厨清洁',
+                image: '/src/assets/images/index/餐厨清洁.png',
+            },
+            {
+                title: '毛巾浴巾',
+                image: '/src/assets/images/index/毛巾浴巾.png',
+            }
+        ],
+        [
+            {
+                title: '卫浴用品',
+                image: '/src/assets/images/index/卫浴用品.png',
+            },
+            {
+                title: '高级珠宝',
+                image: '/src/assets/images/index/高级珠宝.png',
+            },
+            {
+                title: '时尚搭配',
+                image: '/src/assets/images/index/时尚搭配.png',
+            },
+            {
+                title: '数码电器',
+                image: '/src/assets/images/index/数码电器.png',
+            }
+        ],
+        [
+            {
+                title: '影音娱乐',
+                image: '/src/assets/images/index/影音娱乐.png',
+            },
+            {
+                title: '乐器',
+                image: '/src/assets/images/index/乐器.png',
+            },
+            {
+                title: '车载用品',
+                image: '/src/assets/images/index/车载用品.png',
+            },
+            {
+                title: '办公文具',
+                image: '/src/assets/images/index/办公文具.png',
+            }
+        ],
+        [
+            {
+                title: '登机箱',
+                image: '/src/assets/images/index/登机箱.png',
+            },
+            {
+                title: '托运箱',
+                image: '/src/assets/images/index/托运箱.png',
+            },
+            {
+                title: '出行配件',
+                image: '/src/assets/images/index/出行配件.png',
+            },
+            {
+                title: '户外运动鞋',
+                image: '/src/assets/images/index/户外运动鞋.png',
+            }
+        ],
+        [
+            {
+                title: '乐器杂项',
+                image: '/src/assets/images/index/乐器.png',
+            }
+        ]
+    ];
     // 鼠标进入横栏项
     function mouseEnter(index:number){
         hoverIndex.value = index;
         isHover.value = true;
     }
     // 鼠标移出横栏项
-    function mouseLeave(){
+    function mouseLeave(index:number){
         hoverIndex.value = -1;
         isHover.value = false;
+        outIndex.value = index;
+    }
+
+    // 鼠标移入横栏弹出窗
+    function lineMouseEnter(){
+        isHover.value = true;
+        hoverIndex.value = outIndex.value;
+    }
+    // 鼠标移出横栏弹出窗
+    function lineMouseLeave(){
+        isHover.value = false;
+        hoverIndex.value = -1;
     }
 
     let activeMenuLine:Ref<number> = ref(1);
@@ -140,6 +329,90 @@
     function menuBoxMouseOut(e:any){
         activeMenuLine.value = -1;
     }
+
+
+    interface ImenuGoods {
+        image: string;
+        title: string;
+        desc: string;
+        price: number;
+    }
+    // 菜单栏右侧弹窗商品数据内容
+    let menuGoodsArray: Array<Array<ImenuGoods>> = [
+        [
+            {
+                image: 'src/assets/images/index/居家-1.png',
+                title: '圆润大肚流线型耐热玻璃凉水壶',
+                desc: '1.25L容量，耐冷耐热，通透好用',
+                price: 79.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-2.png',
+                title: '不烫手的茶杯双层隔热茶水杯绿茶杯',
+                desc: '368°赏茶汤，108C不烫手',
+                price: 49.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-3.png',
+                title: '热销30w+清洗不用愁简约陶瓷马克杯',
+                desc: '优质炫瓷，不易留渍',
+                price: 19.90,
+            },
+            {
+                image: 'src/assets/images/index/居家-4.png',
+                title: '匠心手工羊脂玉白茶具礼盒6件套',
+                desc: '礼盒套装，送礼佳品',
+                price: 339.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-5.jpg',
+                title: '真空红酒瓶塞带计时功能升级款',
+                desc: '保鲜浪漫，留住口感',
+                price: 339.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-6.png',
+                title: '喝水也要好心情日本美浓烧和蓝系列马克杯',
+                desc: '妙趣横生，经久耐用',
+                price: 55.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-7.png',
+                title: '让全家人喝上甜甜的水黑科技镁离子净水壶',
+                desc: '德国净水黑科技，3.3L大容量',
+                price: 178.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-8.png',
+                title: '四重过滤添加矿物质镁离子滤芯',
+                desc: '补充镁离子，改善口感',
+                price: 169.00,
+            },
+            {
+                image: 'src/assets/images/index/居家-9.jpg',
+                title: '每一口都有七种肉，全价猫粮1.8千克',
+                desc: '多肉零谷物，升级低便臭配方',
+                price: 9.90,
+            }
+        ],
+    ]
+
+    onMounted(() => {
+        // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
+        getIndexData().then(res => {
+            console.log(res);
+            console.log(crossBarArray.data)
+            res.data.result.forEach((item: any) => {
+                let crossObj: Icross = {
+                    title: '',
+                    id: 0,
+                }
+                crossObj.title = item.name;
+                crossObj.id = item.id;
+            });
+
+        })
+    })
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
@@ -265,14 +538,35 @@
     .linebox {
         width: 1240px;
         position: absolute;
+        box-sizing: border-box;
         top: 150px;
         z-index: 99;
-        transition: height .2s linear;
+        transition: all .2s linear .1s;
         box-shadow: 0 0 5px #cccccc;
         background-color: #ffffff;
+        padding: 0 70px;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
     }
-    .hei-100 {
-        height: 100px;
+    .linebox-item {
+        width: 110px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .linebox-item img {
+        width: 60px;
+        height: 60px;
+    }
+    .linebox-item span {
+        padding-top: 10px;
+        font-size: 14px;
+    }
+    .hei-150 {
+        height: 150px;
     }
     .hei-0 {
         height: 0px;
