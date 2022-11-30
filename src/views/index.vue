@@ -19,15 +19,8 @@
                 <img class="headImage" src="../assets/images/index_logo.png">
                 <div class="textbox">
                     <span class="barsText">首页</span>
-                    <span class="barsText" @mouseenter="mouseEnter(1)" @mouseleave="mouseLeave(1)">居家</span>
-                    <span class="barsText" @mouseenter="mouseEnter(2)" @mouseleave="mouseLeave(2)">美食</span>
-                    <span class="barsText" @mouseenter="mouseEnter(3)" @mouseleave="mouseLeave(3)">服饰</span>
-                    <span class="barsText" @mouseenter="mouseEnter(4)" @mouseleave="mouseLeave(4)">母婴</span>
-                    <span class="barsText" @mouseenter="mouseEnter(5)" @mouseleave="mouseLeave(5)">个护</span>
-                    <span class="barsText" @mouseenter="mouseEnter(6)" @mouseleave="mouseLeave(6)">严选</span>
-                    <span class="barsText" @mouseenter="mouseEnter(7)" @mouseleave="mouseLeave(7)">数码</span>
-                    <span class="barsText" @mouseenter="mouseEnter(8)" @mouseleave="mouseLeave(8)">运动</span>
-                    <span class="barsText" @mouseenter="mouseEnter(9)" @mouseleave="mouseLeave(9)">杂项</span>
+                    <span class="barsText" v-for="(item, index) in crossBarArray.data" :key="index"
+                        @mouseenter="mouseEnter(Number(index)+1)" @mouseleave="mouseLeave(Number(index)+1)">{{item.title}}</span>
                 </div>
                 <div class="searchbox">
                     <span class="iconfont icon-fangdajing searchLogo"></span>
@@ -41,7 +34,7 @@
                 </div>
             </div>
             <div class="linebox" :class="isHover ? 'hei-150' : 'hei-0'" @mouseenter="lineMouseEnter" @mouseleave="lineMouseLeave">
-                <div class="linebox-item" v-for="(item, index) in barsImageArray[hoverIndex-1]" :key="index">
+                <div class="linebox-item" v-for="(item, index) in barsImageArray.data[hoverIndex-1]" :key="index">
                     <img :src="item.image">
                     <span>{{ item.title }}</span>
                 </div>
@@ -51,7 +44,7 @@
             <div class="coverbox" @mouseleave="menuBoxMouseOut">
                 <div class="menu">
                     <div class="menu-line" :style="{backgroundColor: `${activeMenuLine == index ? '#27ba9b' : 'transparent'}`}" 
-                        v-for="(item, index) in menuArray" :key="index" @mouseenter="menuLineMouseEnter(index)">
+                        v-for="(item, index) in menuArray.data" :key="index" @mouseenter="menuLineMouseEnter(index)">
                         <span class="fs-16">{{item.title}}</span>
                         <span class="fs-14">{{item.subtitle_1}}</span>
                         <span class="fs-14">{{item.subtitle_2}}</span>
@@ -63,20 +56,20 @@
                     </div>
                 </div>
             </div>
-            <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray" ref="swiperCom"></swiper>
+            <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData } from '../api/api-index';
+    import { getIndexData, getIndexBanner } from '../api/api-rabbit';
     import swiper from '../components/swiper.vue';
     import { onMounted, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
-    // 基本reactive数据接口
-    interface Iract {
-        data: Array<any>
+    // 横栏项数据接口
+    interface IcrossBase {
+        data: Array<Icross>
     }
 
     // 横栏项
@@ -85,217 +78,38 @@
         id: number
     }
     // 横栏项内容
-    let crossBarArray:Iract = reactive({data: []});
+    let crossBarArray:IcrossBase = reactive({data: []});
 
+    interface IbannerBase {
+        data: Array<string>
+    }
     // banner图片地址
-    let imageArray:Array<string> = reactive([
-        'src/assets/images/index/banner1.jpg',
-        'src/assets/images/index/banner2.jpg',
-        'src/assets/images/index/banner3.jpg',
-        'src/assets/images/index/banner4.jpg',
-        'src/assets/images/index/banner5.jpg'
-    ]);
+    let imageArray:IbannerBase = reactive({data: []});
     // 声明菜单栏内容接口
     interface Imenu {
         title: string;
         subtitle_1: string;
         subtitle_2: string;
     }
+    interface IMenuBase {
+        data: Array<Imenu>
+    }
     // 菜单栏内容
-    let menuArray:Array<Imenu> = reactive([
-        {
-            title: '居家', subtitle_1: '茶咖酒具', subtitle_2: '水具杯壶'
-        },
-        {
-            title: '美食', subtitle_1: '网易黑猪', subtitle_2: '水产海鲜'
-        },
-        {
-            title: '服饰', subtitle_1: '室外拖鞋', subtitle_2: '春夏潮鞋'
-        },
-        {
-            title: '母婴', subtitle_1: 'T恤/polo/衬衫', subtitle_2: '卫衣/毛衫'
-        },
-        {
-            title: '个护', subtitle_1: '家庭清洁', subtitle_2: '浴室用品'
-        },
-        {
-            title: '严选', subtitle_1: '卫浴用品', subtitle_2: '高级珠宝'
-        },
-        {
-            title: '数码', subtitle_1: '影音娱乐', subtitle_2: '乐器'
-        },
-        {
-            title: '运动', subtitle_1: '登机箱', subtitle_2: '托运箱'
-        },
-        {
-            title: '杂项', subtitle_1: '乐器杂项', subtitle_2: ''
-        },
-        {
-            title: '品牌', subtitle_1: '品牌推荐', subtitle_2: ''
-        }
-    ])
+    let menuArray:IMenuBase = reactive({data: []})
     let keyword = ref('');
 
     let hoverIndex:Ref<number> = ref(-1); // 当前移入的横栏项下标
     let isHover:Ref<boolean> = ref(false); // 横栏移入状态
     let outIndex:Ref<number> = ref(-1); // 当前移出横栏项的下标，在横栏弹窗鼠标移入时使用
+    // 声明横栏弹出框数据接口
     interface Ibars {
         image: string;
         title: string;
     }
-    let aaa: Array<Array<Ibars>> = reactive([]);
-    let barsImageArray: Array<Array<Ibars>> = [
-        [
-            {
-                title: '茶咖酒具',
-                image: '/src/assets/images/index/茶咖酒具.png',
-            },
-            {
-                title: '水具杯壶',
-                image: '/src/assets/images/index/水具杯壶.png',
-            },
-            {
-                title: '宠物食品',
-                image: '/src/assets/images/index/宠物食品.png',
-            },
-            {
-                title: '宠物用品',
-                image: '/src/assets/images/index/宠物用品.png',
-            }
-        ],
-        [
-            {
-                title: '网易黑猪',
-                image: '/src/assets/images/index/网易黑猪.png',
-            },
-            {
-                title: '水产海鲜',
-                image: '/src/assets/images/index/水产海鲜.png',
-            },
-            {
-                title: '全球美食',
-                image: '/src/assets/images/index/全球美食.png',
-            },
-            {
-                title: '冷冻冷藏',
-                image: '/src/assets/images/index/冷冻冷藏.png',
-            }
-        ],
-        [
-            {
-                title: '室外拖鞋',
-                image: '/src/assets/images/index/室外拖鞋.png',
-            },
-            {
-                title: '春夏潮鞋',
-                image: '/src/assets/images/index/春夏潮鞋.png',
-            },
-            {
-                title: '飞织系列',
-                image: '/src/assets/images/index/飞织系列.png',
-            },
-            {
-                title: '一脚蹬懒人系列',
-                image: '/src/assets/images/index/一脚蹬懒人系列.png',
-            }
-        ],
-        [
-            {
-                title: 'T恤/polo/衬衫',
-                image: '/src/assets/images/index/T恤polo衬衫.png',
-            },
-            {
-                title: '卫衣/毛衫',
-                image: '/src/assets/images/index/卫衣毛衫.png',
-            },
-            {
-                title: '外套/套装',
-                image: '/src/assets/images/index/外套套装.png',
-            },
-            {
-                title: '连体衣/礼盒',
-                image: '/src/assets/images/index/连体衣礼盒.png',
-            }
-        ],
-        [
-            {
-                title: '家庭清洁',
-                image: '/src/assets/images/index/家庭清洁.png',
-            },
-            {
-                title: '浴室用品',
-                image: '/src/assets/images/index/浴室用品.png',
-            },
-            {
-                title: '餐厨清洁',
-                image: '/src/assets/images/index/餐厨清洁.png',
-            },
-            {
-                title: '毛巾浴巾',
-                image: '/src/assets/images/index/毛巾浴巾.png',
-            }
-        ],
-        [
-            {
-                title: '卫浴用品',
-                image: '/src/assets/images/index/卫浴用品.png',
-            },
-            {
-                title: '高级珠宝',
-                image: '/src/assets/images/index/高级珠宝.png',
-            },
-            {
-                title: '时尚搭配',
-                image: '/src/assets/images/index/时尚搭配.png',
-            },
-            {
-                title: '数码电器',
-                image: '/src/assets/images/index/数码电器.png',
-            }
-        ],
-        [
-            {
-                title: '影音娱乐',
-                image: '/src/assets/images/index/影音娱乐.png',
-            },
-            {
-                title: '乐器',
-                image: '/src/assets/images/index/乐器.png',
-            },
-            {
-                title: '车载用品',
-                image: '/src/assets/images/index/车载用品.png',
-            },
-            {
-                title: '办公文具',
-                image: '/src/assets/images/index/办公文具.png',
-            }
-        ],
-        [
-            {
-                title: '登机箱',
-                image: '/src/assets/images/index/登机箱.png',
-            },
-            {
-                title: '托运箱',
-                image: '/src/assets/images/index/托运箱.png',
-            },
-            {
-                title: '出行配件',
-                image: '/src/assets/images/index/出行配件.png',
-            },
-            {
-                title: '户外运动鞋',
-                image: '/src/assets/images/index/户外运动鞋.png',
-            }
-        ],
-        [
-            {
-                title: '乐器杂项',
-                image: '/src/assets/images/index/乐器.png',
-            }
-        ]
-    ];
+    interface IBarsBase {
+        data: Array<Array<Ibars>>
+    }
+    let barsImageArray:IBarsBase = reactive({data: []})
     // 鼠标进入横栏项
     function mouseEnter(index:number){
         hoverIndex.value = index;
@@ -399,20 +213,59 @@
 
     onMounted(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
-        getIndexData().then(res => {
-            console.log(res);
-            console.log(crossBarArray.data)
-            res.data.result.forEach((item: any) => {
-                let crossObj: Icross = {
-                    title: '',
-                    id: 0,
-                }
-                crossObj.title = item.name;
-                crossObj.id = item.id;
-            });
-
-        })
+        getHomeTopData();
+        // 获取首页顶部banner图片数据
+        getHomeBanner();
     })
+
+    // 获取首页顶部相关数据
+    function getHomeTopData(){
+        getIndexData().then(res => {
+            res.data.result.forEach((item: any, Rindex: number) => {
+                // 声明横栏项数据模板
+                let crossObj: Icross = {
+                    title: item.name,
+                    id: item.id,
+                }
+                // 向横栏项中添加数据
+                crossBarArray.data.push(crossObj);
+                
+                // 声明菜单栏内容数据模板
+                let menuObj: Imenu = {
+                    title: item.name,
+                    subtitle_1: '',
+                    subtitle_2: '',
+                }
+                // 声明横栏弹出框数据列表数组，用以储存同组弹出框数据
+                let barsImageList: Array<Ibars> = [];
+                item.children.forEach((temp: any, Cindex:number) => {
+                    switch(Cindex){
+                        case 0 : menuObj.subtitle_1 = temp.name;break;
+                        case 1 : menuObj.subtitle_2 = temp.name;break;
+                    }
+                    // 声明横栏弹出框数据模板
+                    let barsImageObj: Ibars = {
+                        title: temp.name,
+                        image: temp.picture
+                    }
+                    barsImageList.push(barsImageObj)
+                })
+                menuArray.data.push(menuObj)
+                barsImageArray.data.push(barsImageList)
+            });
+        })
+    }
+
+    // 获取顶部banner
+    function getHomeBanner(){
+        getIndexBanner().then(res => {
+            let banner: Array<string> = [];
+            res.data.result.forEach((item: any, index: number) => {
+                banner.push(item.imgUrl)
+            })
+            imageArray.data = banner;
+        })
+    }
 </script>
 <!-- 宽1240 横栏53 -->
 <style>
