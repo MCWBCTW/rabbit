@@ -52,7 +52,17 @@
                 </div>
                 <div class="menu-con" :style="{display: `${activeMenuLine != -1 ? 'block' : 'none'}`}">
                     <div class="menu-con">
-                        
+                        <div class="title-line">
+                            <span class="title-line-title">{{(activeMenuLine == 9 ? '品牌' : '分类')}}推荐</span>
+                            <span class="title-line-desc">根据您的购买或浏览记录推荐</span>
+                        </div>
+                        <div class="good-box" v-if="activeMenuLine == 9">
+                            <!-- 品牌推荐 -->
+                        </div>
+                        <div class="good-box" v-else>
+                            <!-- 分类推荐 -->
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -144,72 +154,17 @@
         activeMenuLine.value = -1;
     }
 
-
+    interface ImenuGoodsBase {
+        data: Array<Array<ImenuGoods>>
+    }
     interface ImenuGoods {
         image: string;
         title: string;
         desc: string;
-        price: number;
+        price: string;
     }
     // 菜单栏右侧弹窗商品数据内容
-    let menuGoodsArray: Array<Array<ImenuGoods>> = [
-        [
-            {
-                image: 'src/assets/images/index/居家-1.png',
-                title: '圆润大肚流线型耐热玻璃凉水壶',
-                desc: '1.25L容量，耐冷耐热，通透好用',
-                price: 79.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-2.png',
-                title: '不烫手的茶杯双层隔热茶水杯绿茶杯',
-                desc: '368°赏茶汤，108C不烫手',
-                price: 49.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-3.png',
-                title: '热销30w+清洗不用愁简约陶瓷马克杯',
-                desc: '优质炫瓷，不易留渍',
-                price: 19.90,
-            },
-            {
-                image: 'src/assets/images/index/居家-4.png',
-                title: '匠心手工羊脂玉白茶具礼盒6件套',
-                desc: '礼盒套装，送礼佳品',
-                price: 339.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-5.jpg',
-                title: '真空红酒瓶塞带计时功能升级款',
-                desc: '保鲜浪漫，留住口感',
-                price: 339.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-6.png',
-                title: '喝水也要好心情日本美浓烧和蓝系列马克杯',
-                desc: '妙趣横生，经久耐用',
-                price: 55.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-7.png',
-                title: '让全家人喝上甜甜的水黑科技镁离子净水壶',
-                desc: '德国净水黑科技，3.3L大容量',
-                price: 178.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-8.png',
-                title: '四重过滤添加矿物质镁离子滤芯',
-                desc: '补充镁离子，改善口感',
-                price: 169.00,
-            },
-            {
-                image: 'src/assets/images/index/居家-9.jpg',
-                title: '每一口都有七种肉，全价猫粮1.8千克',
-                desc: '多肉零谷物，升级低便臭配方',
-                price: 9.90,
-            }
-        ],
-    ]
+    let menuGoodsArray: ImenuGoodsBase = reactive({data: []})
 
     onMounted(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
@@ -221,6 +176,8 @@
     // 获取首页顶部相关数据
     function getHomeTopData(){
         getIndexData().then(res => {
+            console.log(res)
+            // 声明商品数据
             res.data.result.forEach((item: any, Rindex: number) => {
                 // 声明横栏项数据模板
                 let crossObj: Icross = {
@@ -252,7 +209,25 @@
                 })
                 menuArray.data.push(menuObj)
                 barsImageArray.data.push(barsImageList)
+
+                
+                let goodsArray: Array<ImenuGoods> = [];
+                item.goods.forEach((temp: any, Gindex: number) => {
+                    let good: ImenuGoods = {
+                        image: temp.picture,
+                        title: temp.name,
+                        desc: temp.desc,
+                        price: temp.price,
+                    }
+                    goodsArray.push(good)
+                })
+                menuGoodsArray.data.push(goodsArray)
             });
+            menuArray.data.push({
+                title: '品牌',
+                subtitle_1: '品牌推荐',
+                subtitle_2: '',
+            })
         })
     }
 
@@ -458,6 +433,30 @@
         height: 500px;
         background-color: rgba(256, 256, 256, .5);
     }
+    .title-line {
+        width: 960px;
+        height: 82px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .title-line-title {
+        font-size: 20px;
+    }
+    .title-line-desc {
+        font-size: 16px;
+        color: #666666;
+    }
+    .good-box {
+        width: 960px;
+        height: 405px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
 
     .fs-16 {
         font-size: 16px;
