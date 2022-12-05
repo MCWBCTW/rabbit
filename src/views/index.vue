@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
     import { getIndexData, getIndexBanner } from '../api/api-rabbit';
-    import swiper from '../components/swiper.vue';
+    import swiper from 'comp/swiper.vue';
     import { onMounted, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
