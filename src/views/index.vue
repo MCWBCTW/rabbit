@@ -56,12 +56,13 @@
                             <span class="title-line-title">{{(activeMenuLine == 9 ? '品牌' : '分类')}}推荐</span>
                             <span class="title-line-desc">根据您的购买或浏览记录推荐</span>
                         </div>
-                        <div class="good-box" v-if="activeMenuLine == 9">
+                        <div class="good-box2" v-if="activeMenuLine == 9">
                             <!-- 品牌推荐 -->
+                            <miniBrand v-for="(item, index) in brandArray.data" :key="index" :goods="item"></miniBrand>
                         </div>
-                        <div class="good-box" v-else>
+                        <div class="good-box" v-else :style="{height: activeMenuLine == 8 ? '270px' : '405px'}">
                             <!-- 分类推荐 -->
-                            
+                            <miniGoods v-for="(item, index) in menuGoodsArray.data[activeMenuLine]" :key="index" :goods="item"></miniGoods>
                         </div>
                     </div>
                 </div>
@@ -72,8 +73,10 @@
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData } from '../api/api-rabbit';
     import swiper from 'comp/swiper.vue';
+    import miniGoods from 'comp/miniGoods.vue';
+    import miniBrand from 'comp/miniBrand.vue';
     import { onMounted, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
@@ -164,19 +167,31 @@
         price: string;
     }
     // 菜单栏右侧弹窗商品数据内容
-    let menuGoodsArray: ImenuGoodsBase = reactive({data: []})
+    let menuGoodsArray: ImenuGoodsBase = reactive({data: []});
+
+    interface Ibrand {
+        image: string;
+        place: string;
+        name: string;
+        desc: string;
+    }
+    interface IbrandBase {
+        data: Array<Ibrand>
+    }
+    let brandArray: IbrandBase = reactive({data: []});
 
     onMounted(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
         // 获取首页顶部banner图片数据
         getHomeBanner();
+        // 获取首页品牌数据
+        getBrand();
     })
 
     // 获取首页顶部相关数据
     function getHomeTopData(){
         getIndexData().then(res => {
-            console.log(res)
             // 声明商品数据
             res.data.result.forEach((item: any, Rindex: number) => {
                 // 声明横栏项数据模板
@@ -228,6 +243,7 @@
                 subtitle_1: '品牌推荐',
                 subtitle_2: '',
             })
+            console.log(menuGoodsArray)
         })
     }
 
@@ -241,9 +257,24 @@
             imageArray.data = banner;
         })
     }
+
+    // 获取首页品牌
+    function getBrand(){
+        getBrandData().then(res => {
+            res.data.result.forEach((item: any, index: number) => {
+                let brandObj: Ibrand = {
+                    image: item.picture,
+                    place: item.place,
+                    name: item.name,
+                    desc: item.desc,
+                }
+                brandArray.data.push(brandObj)
+            })
+        })
+    }
 </script>
 <!-- 宽1240 横栏53 -->
-<style>
+<style scoped>
     .index {
         width: 100vw;
         display: flex;
@@ -450,14 +481,19 @@
     }
     .good-box {
         width: 960px;
-        height: 405px;
         margin: 0 15px;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
     }
-
-
+    .good-box2 {
+        width: 960px;
+        height: 390px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
     .fs-16 {
         font-size: 16px;
     }
