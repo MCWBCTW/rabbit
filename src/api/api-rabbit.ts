@@ -23,3 +23,11 @@ export function getBrandData(){
         method: 'get'
     })
 }
+
+// 获取首页新鲜好物
+export function getGoodGoods(){
+    return axios({
+        url: 'https://apipc-xiaotuxian-front.itheima.net/home/new',
+        method: 'get'
+    })
+}

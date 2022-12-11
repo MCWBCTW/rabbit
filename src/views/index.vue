@@ -69,14 +69,28 @@
             </div>
             <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
         </div>
+        <div class="descline">
+            <div class="desc-left">
+                <span class="desc-title">新鲜好物</span>
+                <span class="desc-subtitle">新鲜出炉 品质靠谱</span>
+            </div>
+            <div class="desc-right">
+                <span class="desc-to">查看全部</span>
+                <span class="iconfont icon-xiangyou logo-right"></span>
+            </div>
+        </div>
+        <!-- <div class="level">
+            <bigGoods v-for="(item, index) in goodsArray.data" :key="index" :goods="item"></bigGoods>
+        </div> -->
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods } from '../api/api-rabbit';
     import swiper from 'comp/swiper.vue';
     import miniGoods from 'comp/miniGoods.vue';
     import miniBrand from 'comp/miniBrand.vue';
+    import bigGoods from 'comp/bigGoods.vue';
     import { onMounted, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
@@ -169,6 +183,7 @@
     // 菜单栏右侧弹窗商品数据内容
     let menuGoodsArray: ImenuGoodsBase = reactive({data: []});
 
+
     interface Ibrand {
         image: string;
         place: string;
@@ -178,7 +193,21 @@
     interface IbrandBase {
         data: Array<Ibrand>
     }
+    // 品牌数据
     let brandArray: IbrandBase = reactive({data: []});
+
+
+
+    interface Igoods {
+        desc: string;
+        image: string;
+        price: string;
+    }
+    interface IgoodsBase {
+        data: Array<Igoods>
+    }
+    // 好物数据
+    let goodsArray: IgoodsBase = reactive({data: []})
 
     onMounted(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
@@ -187,6 +216,8 @@
         getHomeBanner();
         // 获取首页品牌数据
         getBrand();
+        // 获取首页好物
+        getGood();
     })
 
     // 获取首页顶部相关数据
@@ -243,7 +274,6 @@
                 subtitle_1: '品牌推荐',
                 subtitle_2: '',
             })
-            console.log(menuGoodsArray)
         })
     }
 
@@ -269,6 +299,21 @@
                     desc: item.desc,
                 }
                 brandArray.data.push(brandObj)
+            })
+        })
+    }
+
+    // 获取新鲜好物
+    function getGood(){
+        getGoodGoods().then(res => {
+            console.log(res)
+            res.data.result.forEach((item: any, index: number) => {
+                let goods: Igoods = {
+                    desc: item.desc,
+                    image: item.picture,
+                    price: item.price,
+                }
+                goodsArray.data.push(goods)
             })
         })
     }
@@ -493,6 +538,47 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+    }
+    .descline {
+        padding: 40px 0;
+        width: 1240px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .desc-left {
+        display: flex;
+        align-items: flex-end;
+    }
+    .desc-title {
+        font-size: 32px;
+        color: #333333;
+    }
+    .desc-right {
+        display: flex;
+        align-items: flex-end;
+        cursor: pointer;
+        color: #999999;
+    }
+    .desc-right:hover {
+        color: #27ba9b;
+    }
+    .desc-subtitle {
+        font-size: 16px;
+        color: #999999;
+        margin-left: 20px;
+    }
+    .desc-to {
+        font-size: 16px;
+    }
+    .logo-right {
+        font-size: 14px;
+        margin-bottom: 2px;
+    }
+    .level {
+        width: 1240px;
+        display: flex;
+        flex-direction: row;
     }
     .fs-16 {
         font-size: 16px;
