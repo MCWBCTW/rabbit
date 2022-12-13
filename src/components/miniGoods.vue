@@ -34,6 +34,7 @@
     flex-direction: row;
     box-sizing: border-box;
     cursor: pointer;
+    border: 1px solid rgba(204, 204, 204, .3);
 }
 .goods:hover {
     background-color: #e3f9f4;

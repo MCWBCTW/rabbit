@@ -28,7 +28,7 @@
     padding: 10px;
     box-sizing: border-box;
     background-color: #ffffff;
-    border: 1px solid #cccccc;
+    border: 1px solid rgba(204, 204, 204, .3);
     border-radius: 8px;
     margin: 0 10px 0 0;
     cursor: pointer;
