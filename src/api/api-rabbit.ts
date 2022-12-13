@@ -31,3 +31,11 @@ export function getGoodGoods(){
         method: 'get'
     })
 }
+
+// 获取首页人气推荐
+export function getHotGoods(){
+    return axios({
+        url: 'https://apipc-xiaotuxian-front.itheima.net/home/hot',
+        method: 'get'
+    })
+}

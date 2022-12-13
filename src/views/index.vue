@@ -79,14 +79,25 @@
                 <span class="iconfont icon-xiangyou logo-right"></span>
             </div>
         </div>
-        <!-- <div class="level">
-            <bigGoods v-for="(item, index) in goodsArray.data" :key="index" :goods="item"></bigGoods>
-        </div> -->
+        <div class="level">
+            <bigGoods v-for="(item, index) in goodsArray.data" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
+        </div>
+        <div class="descline">
+            <div class="desc-left">
+                <span class="desc-title">人气推荐</span>
+                <span class="desc-subtitle">人气爆款 不容错过</span>
+            </div>
+            <div class="desc-right">
+            </div>
+        </div>
+        <div class="level">
+            <bigGoods v-for="(item, index) in hotGoods.data" :key="index" :goods="item" :priceColor="'#999999'"></bigGoods>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods } from '../api/api-rabbit';
     import swiper from 'comp/swiper.vue';
     import miniGoods from 'comp/miniGoods.vue';
     import miniBrand from 'comp/miniBrand.vue';
@@ -160,7 +171,7 @@
         hoverIndex.value = -1;
     }
 
-    let activeMenuLine:Ref<number> = ref(1);
+    let activeMenuLine:Ref<number> = ref(-1);
     // 鼠标移入菜单栏列表，与之下标匹配项背景色修改
     function menuLineMouseEnter(index: number){
         activeMenuLine.value = index;
@@ -209,6 +220,17 @@
     // 好物数据
     let goodsArray: IgoodsBase = reactive({data: []})
 
+
+    interface Ihot {
+        title: string;
+        image: string;
+        desc: string;
+    }
+    interface IhotBase {
+        data: Array<Ihot>
+    }
+    // 人气推荐
+    let hotGoods: IhotBase = reactive({data: []})
     onMounted(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
@@ -218,6 +240,8 @@
         getBrand();
         // 获取首页好物
         getGood();
+        // 获取人气推荐
+        getHot();
     })
 
     // 获取首页顶部相关数据
@@ -306,14 +330,27 @@
     // 获取新鲜好物
     function getGood(){
         getGoodGoods().then(res => {
-            console.log(res)
             res.data.result.forEach((item: any, index: number) => {
                 let goods: Igoods = {
-                    desc: item.desc,
+                    desc: item.name,
                     image: item.picture,
                     price: item.price,
                 }
                 goodsArray.data.push(goods)
+            })
+        })
+    }
+
+    // 获取人气推荐
+    function getHot(){
+        getHotGoods().then(res => {
+            res.data.result.forEach((item: any, index: number) => {
+                let hot: Ihot = {
+                    title: item.title,
+                    image: item.picture,
+                    desc: item.alt,
+                }
+                hotGoods.data.push(hot)
             })
         })
     }
@@ -578,7 +615,10 @@
     .level {
         width: 1240px;
         display: flex;
+        padding: 0;
+        margin: 0;
         flex-direction: row;
+        justify-content: space-between;
     }
     .fs-16 {
         font-size: 16px;
