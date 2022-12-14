@@ -16,7 +16,7 @@
         </div>
         <div class="bars">
             <div class="barsbox">
-                <img class="headImage" src="../assets/images/index_logo.png">
+                <img class="headImage" src="/images/index_logo.png">
                 <div class="textbox">
                     <span class="barsText">首页</span>
                     <span class="barsText" v-for="(item, index) in crossBarArray.data" :key="index"
@@ -680,7 +680,7 @@
 		color: #ffffff;
 	}
 	.btn-content {
-		
+		font-size: 12px;
 	}
     .fs-16 {
         font-size: 16px;

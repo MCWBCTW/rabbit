@@ -8,7 +8,20 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      comp: resolve(__dirname, 'src/components')
+      // 配置公共组件引用路径
+      comp: resolve(__dirname, 'src/components'),
+      // 配置静态图片引用路径
+      '/images': './src/assets/images'
+    }
+  },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        // 生产环境时移出console，移除断点
+        drop_console: true,
+        drop_debugger: true
+      }
     }
   }
 })
