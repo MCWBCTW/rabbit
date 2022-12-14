@@ -1,5 +1,5 @@
 <template>
-    <div class="swiper" v-if="!level" :style="{width: `${width}px`, height: `${height}px`}" @mouseenter="mouseEnter" @mouseleave="mouseOut">
+    <div class="swiper" v-if="type == 1" :style="{width: `${width}px`, height: `${height}px`}" @mouseenter="mouseEnter" @mouseleave="mouseOut">
         <img :class="imageShowIndex == Number(index) ? 'tran op-1' : 'op-0'" v-for="(item, index) in imageArray" :key="index" :src="item"
          :style="{width: `${width}px`, height: `${height}px`}">
         <div class="btnbox" v-show="isHover" :style="{left: `${leftLeft}px`, top: `${btnTop}px`}" @click="bannerReduce">
@@ -12,7 +12,9 @@
             <div :class="imageShowIndex == Number(index) ? 'white' : 'grey'"  v-for="(item, index) in imageArray" :key="index" @click="choiceBanner(Number(index))"></div>
         </div>
     </div>
-    <div class="swiper" v-else></div>
+    <div class="swiper" v-else-if="type == 2" :style="{width: `${width}px`, height: `${height}px`}">
+		
+	</div>
 </template>
 
 <script lang="ts" setup>
@@ -22,12 +24,12 @@
         loopFun();
     })
     const props = defineProps({
-        // 轮播图宽度
+        // 轮播图宽度，整体宽度，type=2时，不是图片的宽度
         width: {
             type: Number,
             default: 1000,
         },
-        // 轮播图高度
+        // 轮播图高度，整体高度，type=2时，不是图片的高度
         height: {
             type: Number,
             default: 400,
@@ -37,10 +39,10 @@
             type: Object,
             default: () => []
         },
-        // 是否水平切换
-        level: {
-            type: Boolean,
-            default: false
+        // 轮播图类型
+        type: {
+            type: Number,
+            default: 1
         },
         // 左侧按钮距左侧的距离
         leftLeft: {

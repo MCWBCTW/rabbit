@@ -27,6 +27,7 @@
             type: String,
             default: '#ffffff'
         },
+		// 信息价格颜色
         priceColor: {
             type: String,
             default: '#333333'
@@ -40,6 +41,7 @@
     display: flex;
     flex-direction: column;
     transition: all .5s;
+	cursor: pointer;
 }
 .goods-1:hover {
     transform: translate3d(0,-3px,0);

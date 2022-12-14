@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <swiper :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
+            <swiper :type="1" :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
         </div>
         <div class="descline">
             <div class="desc-left">
@@ -87,22 +87,38 @@
                 <span class="desc-title">人气推荐</span>
                 <span class="desc-subtitle">人气爆款 不容错过</span>
             </div>
-            <div class="desc-right">
-            </div>
+            <div class="desc-right"></div>
         </div>
         <div class="level">
             <bigGoods v-for="(item, index) in hotGoods.data" :key="index" :goods="item" :priceColor="'#999999'"></bigGoods>
         </div>
+		<div class="descline">
+		    <div class="desc-left">
+		        <span class="desc-title">热门品牌</span>
+		        <span class="desc-subtitle">国际经典 品质保证</span>
+		    </div>
+		    <div class="desc-right">
+				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}">
+					<span class="iconfont icon-xiangzuo1 btn-content"></span>
+				</div>
+				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}">
+					<span class="iconfont icon-xiangyou btn-content"></span>
+				</div>
+			</div>
+		</div>
+		<div class="level">
+			
+		</div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData } from '../api/api-rabbit';
     import swiper from 'comp/swiper.vue';
     import miniGoods from 'comp/miniGoods.vue';
     import miniBrand from 'comp/miniBrand.vue';
     import bigGoods from 'comp/bigGoods.vue';
-    import { onMounted, reactive, ref } from 'vue';
+    import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
     // 横栏项数据接口
@@ -178,7 +194,7 @@
     }
 
     // 鼠标移出整体菜单栏
-    function menuBoxMouseOut(e:any){
+    function menuBoxMouseOut(){
         activeMenuLine.value = -1;
     }
 
@@ -229,9 +245,23 @@
     interface IhotBase {
         data: Array<Ihot>
     }
-    // 人气推荐
+    // 人气推荐数据
     let hotGoods: IhotBase = reactive({data: []})
-    onMounted(() => {
+	
+	// 热门品牌
+	let hotBrandIndex: Ref<Number> = ref(1);
+	
+	interface IhotBrand {
+		place: string;
+		image: string;
+		name: string;
+	}
+	interface IhotBrandBase {
+		data: Array<IhotBrand>
+	}
+	let hotBrandArray: IhotBrandBase = reactive({data: []});
+	
+    onBeforeMount(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
         // 获取首页顶部banner图片数据
@@ -242,6 +272,8 @@
         getGood();
         // 获取人气推荐
         getHot();
+		// 获取热门品牌
+		getHotBrand();
     })
 
     // 获取首页顶部相关数据
@@ -354,6 +386,20 @@
             })
         })
     }
+	
+	// 获取热门品牌数据
+	function getHotBrand(){
+		getHotBrandData().then(res => {
+			res.data.result.forEach((item: any, index: number) => {
+			    let brand: IhotBrand = {
+			        place: item.place,
+			        image: item.picture,
+			        name: item.name,
+			    }
+			    hotBrandArray.data.push(brand)
+			})
+		})
+	}
 </script>
 <!-- 宽1240 横栏53 -->
 <style scoped>
@@ -497,6 +543,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+		cursor: pointer;
     }
     .linebox-item img {
         width: 60px;
@@ -620,6 +667,21 @@
         flex-direction: row;
         justify-content: space-between;
     }
+	.right-btn {
+		width: 20px;
+		height: 20px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 10px;
+	}
+	.right-btn span {
+		font-size: 16px;
+		color: #ffffff;
+	}
+	.btn-content {
+		
+	}
     .fs-16 {
         font-size: 16px;
     }

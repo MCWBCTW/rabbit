@@ -39,3 +39,11 @@ export function getHotGoods(){
         method: 'get'
     })
 }
+
+// 获取首页热门品牌
+export function getHotBrandData(){
+	return axios({
+		url: 'https://apipc-xiaotuxian-front.itheima.net/home/brand?limit=10',
+		method: 'get'
+	})
+}
