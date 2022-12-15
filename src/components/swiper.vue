@@ -12,8 +12,10 @@
             <div :class="imageShowIndex == Number(index) ? 'white' : 'grey'"  v-for="(item, index) in imageArray" :key="index" @click="choiceBanner(Number(index))"></div>
         </div>
     </div>
-    <div class="swiper" v-else-if="type == 2" :style="{width: `${width}px`, height: `${height}px`}">
-		
+    <div class="swiper-2" v-else-if="type == 2" :style="{width: `${width}px`, height: `${height}px`}">
+		<div class="swiper-2-box" :style="{width: `${width}px`, height: `${height}px`}">
+            <img class="swiper-2-img" v-for="(item, index) in imageArray" :key="index" :src="item.image">
+        </div>
 	</div>
 </template>
 
@@ -177,5 +179,21 @@
     }
     .grey {
         background-color: rgba(0, 0, 0, .2);
+    }
+    .swiper-2 {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+    .swiper-2-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+    }
+    .swiper-2-img {
+        width: 240px;
+        height: 305px;
     }
 </style>

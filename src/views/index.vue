@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="level">
-            <bigGoods v-for="(item, index) in goodsArray.data" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
+            <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
         </div>
         <div class="descline">
             <div class="desc-left">
@@ -90,7 +90,7 @@
             <div class="desc-right"></div>
         </div>
         <div class="level">
-            <bigGoods v-for="(item, index) in hotGoods.data" :key="index" :goods="item" :priceColor="'#999999'"></bigGoods>
+            <bigGoods v-for="(item, index) in hotGoods.data" :type="2" :key="index" :goods="item" :priceColor="'#999999'"></bigGoods>
         </div>
 		<div class="descline">
 		    <div class="desc-left">
@@ -101,13 +101,13 @@
 				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}">
 					<span class="iconfont icon-xiangzuo1 btn-content"></span>
 				</div>
-				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}">
+				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == hotBrandArray.data.length ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == hotBrandArray.data.length ? 'no-drop' : 'pointer'}`}">
 					<span class="iconfont icon-xiangyou btn-content"></span>
 				</div>
 			</div>
 		</div>
 		<div class="level">
-			
+			<swiper :type="2" :width="1240" :height="345" v-for="(item, index) in hotBrandArray.data" :key="index" :imageArray="item"></swiper>
 		</div>
     </div>
 </template>
@@ -257,7 +257,7 @@
 		name: string;
 	}
 	interface IhotBrandBase {
-		data: Array<IhotBrand>
+		data: Array<Array<IhotBrand>>
 	}
 	let hotBrandArray: IhotBrandBase = reactive({data: []});
 	
@@ -390,13 +390,21 @@
 	// 获取热门品牌数据
 	function getHotBrand(){
 		getHotBrandData().then(res => {
+            let arr: Array<IhotBrand> = []; // 暂存数组
 			res.data.result.forEach((item: any, index: number) => {
-			    let brand: IhotBrand = {
-			        place: item.place,
-			        image: item.picture,
-			        name: item.name,
-			    }
-			    hotBrandArray.data.push(brand)
+                let brand: IhotBrand = {
+                    place: item.place,
+                    image: item.picture,
+                    name: item.name,
+                }
+                // 当暂存数组长度为4时，再存一个后为5个，满了，在向结果数据中添加数组后重置暂存数组
+                if(arr.length == 4){
+                    arr.push(brand)
+    			    hotBrandArray.data.push(arr)
+                    arr = [];
+                } else {
+                    arr.push(brand)
+                }
 			})
 		})
 	}

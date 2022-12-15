@@ -2,10 +2,15 @@
     <div class="goods-1" v-if="type == 1">
         <img class="image-1" :src="goods.image">
         <div class="info-1" :style="{backgroundColor: `${infoBG}`}">
-            <!-- 首页，新鲜好物为desc，人气推荐为title，两种数据中，好物存在price参数，人气推荐不存在price -->
-            <div class="title-1">{{goods.price ? goods.desc : goods.title}}</div>
-            <span class="price-1" v-if="goods.price" :style="{color: `${priceColor}`}">￥{{goods.price}}</span>
-            <span class="desc-1" v-else :style="{color: `${priceColor}`}">{{goods.desc}}</span>
+            <div class="title-1">{{goods.desc}}</div>
+            <span class="price-1" :style="{color: `${priceColor}`}">￥{{goods.price}}</span>
+        </div>
+    </div>
+    <div class="goods-1" v-if="type == 2">
+        <img class="image-1" :src="goods.image">
+        <div class="info-1" :style="{backgroundColor: `${infoBG}`}">
+            <div class="title-1">{{goods.title}}</div>
+            <span class="desc-1" :style="{color: `${priceColor}`}">{{goods.desc}}</span>
         </div>
     </div>
 </template>
