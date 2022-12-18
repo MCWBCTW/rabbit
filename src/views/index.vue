@@ -80,9 +80,10 @@
             </div>
         </div>
         <div class="level">
+            <!-- 问题应该就是处在这个组件 -->
             <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
         </div>
-        <div class="descline">
+        <!-- <div class="descline">
             <div class="desc-left">
                 <span class="desc-title">人气推荐</span>
                 <span class="desc-subtitle">人气爆款 不容错过</span>
@@ -108,7 +109,7 @@
 		</div>
 		<div class="level">
 			<swiper :type="2" :width="1240" :height="345" v-for="(item, index) in hotBrandArray.data" :key="index" :imageArray="item"></swiper>
-		</div>
+		</div> -->
     </div>
 </template>
 

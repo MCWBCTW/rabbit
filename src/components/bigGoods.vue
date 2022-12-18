@@ -1,5 +1,7 @@
 <template>
     <div class="goods-1" v-if="type == 1">
+        <!-- 问题应该是这个图片，注释掉这个，就不会有，但是不知道为什么，只是设置了宽高，也没有超出外层盒子，图片设置小一些也没用 -->
+        <!-- <img class="image-1" :src="goods.image"> -->
         <img class="image-1" :src="goods.image">
         <div class="info-1" :style="{backgroundColor: `${infoBG}`}">
             <div class="title-1">{{goods.desc}}</div>
