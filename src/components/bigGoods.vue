@@ -49,6 +49,7 @@
     flex-direction: column;
     transition: all .5s;
 	cursor: pointer;
+	box-sizing: border-box;
 }
 .goods-1:hover {
     transform: translate3d(0,-3px,0);

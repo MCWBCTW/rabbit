@@ -83,7 +83,7 @@
             <!-- 问题应该就是处在这个组件 -->
             <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
         </div>
-        <!-- <div class="descline">
+        <div class="descline">
             <div class="desc-left">
                 <span class="desc-title">人气推荐</span>
                 <span class="desc-subtitle">人气爆款 不容错过</span>
@@ -99,17 +99,17 @@
 		        <span class="desc-subtitle">国际经典 品质保证</span>
 		    </div>
 		    <div class="desc-right">
-				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}">
+				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(0)">
 					<span class="iconfont icon-xiangzuo1 btn-content"></span>
 				</div>
-				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == hotBrandArray.data.length ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == hotBrandArray.data.length ? 'no-drop' : 'pointer'}`}">
+				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(1240)">
 					<span class="iconfont icon-xiangyou btn-content"></span>
 				</div>
 			</div>
 		</div>
 		<div class="level">
-			<swiper :type="2" :width="1240" :height="345" v-for="(item, index) in hotBrandArray.data" :key="index" :imageArray="item"></swiper>
-		</div> -->
+			<swiper :type="2" :width="1240" :height="345" :imageArray="hotBrandArray.data" :paddingDistance="paddingDistance"></swiper>
+		</div>
     </div>
 </template>
 
@@ -258,10 +258,24 @@
 		name: string;
 	}
 	interface IhotBrandBase {
-		data: Array<Array<IhotBrand>>
+		data: Array<IhotBrand>
 	}
 	let hotBrandArray: IhotBrandBase = reactive({data: []});
 	
+	// swiper type为2时，右侧的距离值
+	let paddingDistance: Ref<Number> = ref(0)
+	
+	// 修改type为2的swiper时，右侧的距离值
+	function checkSwiper(num: number){
+		if(num == 0 && hotBrandIndex.value == 1){
+			return
+		}
+		if(num == 1240 && hotBrandIndex.value == 2){
+			return
+		}
+		hotBrandIndex.value = hotBrandIndex.value == 1 ? 2 : 1;
+		paddingDistance.value = num;
+	}
     onBeforeMount(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
@@ -281,7 +295,7 @@
     function getHomeTopData(){
         getIndexData().then(res => {
             // 声明商品数据
-            res.data.result.forEach((item: any, Rindex: number) => {
+            res.data.result.forEach((item: any) => {
                 // 声明横栏项数据模板
                 let crossObj: Icross = {
                     title: item.name,
@@ -315,7 +329,7 @@
 
                 
                 let goodsArray: Array<ImenuGoods> = [];
-                item.goods.forEach((temp: any, Gindex: number) => {
+                item.goods.forEach((temp: any) => {
                     let good: ImenuGoods = {
                         image: temp.picture,
                         title: temp.name,
@@ -338,7 +352,7 @@
     function getHomeBanner(){
         getIndexBanner().then(res => {
             let banner: Array<string> = [];
-            res.data.result.forEach((item: any, index: number) => {
+            res.data.result.forEach((item: any) => {
                 banner.push(item.imgUrl)
             })
             imageArray.data = banner;
@@ -348,7 +362,7 @@
     // 获取首页品牌
     function getBrand(){
         getBrandData().then(res => {
-            res.data.result.forEach((item: any, index: number) => {
+            res.data.result.forEach((item: any) => {
                 let brandObj: Ibrand = {
                     image: item.picture,
                     place: item.place,
@@ -363,7 +377,7 @@
     // 获取新鲜好物
     function getGood(){
         getGoodGoods().then(res => {
-            res.data.result.forEach((item: any, index: number) => {
+            res.data.result.forEach((item: any) => {
                 let goods: Igoods = {
                     desc: item.name,
                     image: item.picture,
@@ -377,7 +391,7 @@
     // 获取人气推荐
     function getHot(){
         getHotGoods().then(res => {
-            res.data.result.forEach((item: any, index: number) => {
+            res.data.result.forEach((item: any) => {
                 let hot: Ihot = {
                     title: item.title,
                     image: item.picture,
@@ -391,22 +405,18 @@
 	// 获取热门品牌数据
 	function getHotBrand(){
 		getHotBrandData().then(res => {
-            let arr: Array<IhotBrand> = []; // 暂存数组
-			res.data.result.forEach((item: any, index: number) => {
+			res.data.result.forEach((item: any) => {
                 let brand: IhotBrand = {
                     place: item.place,
                     image: item.picture,
                     name: item.name,
                 }
-                // 当暂存数组长度为4时，再存一个后为5个，满了，在向结果数据中添加数组后重置暂存数组
-                if(arr.length == 4){
-                    arr.push(brand)
-    			    hotBrandArray.data.push(arr)
-                    arr = [];
-                } else {
-                    arr.push(brand)
-                }
+				hotBrandArray.data.push(brand)
 			})
+			setTimeout(() => {
+				paddingDistance.value = 1240;
+				console.log(paddingDistance.value)
+			}, 10000)
 		})
 	}
 </script>

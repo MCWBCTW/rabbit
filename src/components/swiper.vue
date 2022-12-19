@@ -12,9 +12,9 @@
             <div :class="imageShowIndex == Number(index) ? 'white' : 'grey'"  v-for="(item, index) in imageArray" :key="index" @click="choiceBanner(Number(index))"></div>
         </div>
     </div>
-    <div class="swiper-2" v-else-if="type == 2" :style="{width: `${width}px`, height: `${height}px`}">
-		<div class="swiper-2-box" :style="{width: `${width}px`, height: `${height}px`}">
-            <img class="swiper-2-img" v-for="(item, index) in imageArray" :key="index" :src="item.image">
+    <div class="swiper-2" v-else-if="type == 2" :style="{width: `${width * imageArray.length}px`, height: `${height}px`}">
+		<div class="swiper-2-box" :style="{width: `${width}px`, height: `${height}px`, right: `${paddingDistance}px`}">
+            <img class="swiper-2-img" v-for="(item, o) in imageArray" :key="o" :src="item.image">
         </div>
 	</div>
 </template>
@@ -60,7 +60,12 @@
         btnTop: {
             type: Number,
             default: 0,
-        }
+        },
+		// type == 2时，右侧padding值，做轮播效果
+		paddingDistance: {
+			type: Number,
+			default: 0,
+		}
     })
     // 声明循环函数的返回值
     let timer:any = ref(null);
@@ -183,17 +188,20 @@
     .swiper-2 {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+		flex-wrap: nowrap;
         overflow: hidden;
+		position: relative;
     }
     .swiper-2-box {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         flex-wrap: nowrap;
+		position: absolute;
+		transition: all .5s linear;
     }
     .swiper-2-img {
         width: 240px;
         height: 305px;
+		margin-right: 10px;
     }
 </style>
