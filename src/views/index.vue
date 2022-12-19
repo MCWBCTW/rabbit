@@ -413,10 +413,6 @@
                 }
 				hotBrandArray.data.push(brand)
 			})
-			setTimeout(() => {
-				paddingDistance.value = 1240;
-				console.log(paddingDistance.value)
-			}, 10000)
 		})
 	}
 </script>
