@@ -47,3 +47,19 @@ export function getHotBrandData(){
 		method: 'get'
 	})
 }
+
+// 获取首页商品
+export function getIndexGoods(){
+    return axios({
+        url: 'https://apipc-xiaotuxian-front.itheima.net/home/goods',
+        method: 'get'
+    })
+}
+
+// 获取首页最新专题
+export function getIndexSpecial(){
+    return axios({
+        url: 'https://apipc-xiaotuxian-front.itheima.net/home/special',
+        method: 'get'
+    })
+}

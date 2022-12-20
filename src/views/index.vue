@@ -69,56 +69,42 @@
             </div>
             <swiper :type="1" :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
         </div>
-        <div class="descline">
-            <div class="desc-left">
-                <span class="desc-title">新鲜好物</span>
-                <span class="desc-subtitle">新鲜出炉 品质靠谱</span>
-            </div>
-            <div class="desc-right">
-                <span class="desc-to">查看全部</span>
-                <span class="iconfont icon-xiangyou logo-right"></span>
-            </div>
-        </div>
+        <descBars :title="'新鲜好物'" :subtitle="'新鲜出炉 品质靠谱'" :showMore="true"></descBars>
         <div class="level">
             <!-- 问题应该就是处在这个组件 -->
             <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
         </div>
-        <div class="descline">
-            <div class="desc-left">
-                <span class="desc-title">人气推荐</span>
-                <span class="desc-subtitle">人气爆款 不容错过</span>
-            </div>
-            <div class="desc-right"></div>
-        </div>
+        <descBars :title="'人气推荐'" :subtitle="'人气爆款 不容错过'"></descBars>
         <div class="level">
             <bigGoods v-for="(item, index) in hotGoods.data" :type="2" :key="index" :goods="item" :priceColor="'#999999'"></bigGoods>
         </div>
-		<div class="descline">
-		    <div class="desc-left">
-		        <span class="desc-title">热门品牌</span>
-		        <span class="desc-subtitle">国际经典 品质保证</span>
-		    </div>
-		    <div class="desc-right">
-				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(0)">
-					<span class="iconfont icon-xiangzuo1 btn-content"></span>
-				</div>
-				<div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(1240)">
-					<span class="iconfont icon-xiangyou btn-content"></span>
-				</div>
-			</div>
-		</div>
-		<div class="level">
-			<swiper :type="2" :width="1240" :height="345" :imageArray="hotBrandArray.data" :paddingDistance="paddingDistance"></swiper>
-		</div>
+        <div class="greyLine">
+            <descBars :title="'热门品牌'" :subtitle="'国际经典 品质保证'">
+                <div class="desc-right">
+                    <div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(0)">
+                        <span class="iconfont icon-xiangzuo1 btn-content"></span>
+                    </div>
+                    <div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(1240)">
+                        <span class="iconfont icon-xiangyou btn-content"></span>
+                    </div>
+                </div>
+            </descBars>
+        </div>
+        <div class="greyLine">
+            <div class="level">
+                <swiper :type="2" :width="1240" :height="345" :imageArray="hotBrandArray.data" :paddingDistance="paddingDistance"></swiper>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData } from '../api/api-rabbit';
-    import swiper from 'comp/swiper.vue';
-    import miniGoods from 'comp/miniGoods.vue';
-    import miniBrand from 'comp/miniBrand.vue';
-    import bigGoods from 'comp/bigGoods.vue';
+    import swiper from 'custom/swiper.vue';
+    import miniGoods from 'custom/miniGoods.vue';
+    import miniBrand from 'custom/miniBrand.vue';
+    import bigGoods from 'custom/bigGoods.vue';
+    import descBars from 'custom/descBars.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
@@ -416,10 +402,10 @@
 		})
 	}
 </script>
-<!-- 宽1240 横栏53 -->
+
 <style scoped>
     .index {
-        width: 100vw;
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -427,7 +413,7 @@
     }
     /* 顶部标题 */
     .head {
-        width: 100vw;
+        width: 100%;
         height: 53px;
         background-color: #333333;
         display: flex;
@@ -459,7 +445,7 @@
     }
     /* 中部分栏区域 */
     .bars {
-        width: 100vw;
+        width: 100%;
         height: 132px;
         background-color: #ffffff;
         display: flex;
@@ -638,41 +624,11 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
-    .descline {
-        padding: 40px 0;
-        width: 1240px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .desc-left {
-        display: flex;
-        align-items: flex-end;
-    }
-    .desc-title {
-        font-size: 32px;
-        color: #333333;
-    }
     .desc-right {
         display: flex;
         align-items: flex-end;
         cursor: pointer;
         color: #999999;
-    }
-    .desc-right:hover {
-        color: #27ba9b;
-    }
-    .desc-subtitle {
-        font-size: 16px;
-        color: #999999;
-        margin-left: 20px;
-    }
-    .desc-to {
-        font-size: 16px;
-    }
-    .logo-right {
-        font-size: 14px;
-        margin-bottom: 2px;
     }
     .level {
         width: 1240px;
@@ -694,6 +650,12 @@
 		font-size: 16px;
 		color: #ffffff;
 	}
+    .greyLine {
+        width: 100%;
+        background-color: #f5f5f5;
+        display: flex;
+        justify-content: center;
+    }
 	.btn-content {
 		font-size: 12px;
 	}
