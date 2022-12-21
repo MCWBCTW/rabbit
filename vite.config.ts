@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       // 配置公共组件引用路径
       custom: resolve(__dirname, 'src/components/custom'),
+      home: resolve(__dirname, 'src/components/home'),
       // 配置静态图片引用路径
       '/images': './src/assets/images'
     }

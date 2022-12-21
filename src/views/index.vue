@@ -95,16 +95,25 @@
                 <swiper :type="2" :width="1240" :height="345" :imageArray="hotBrandArray.data" :paddingDistance="paddingDistance"></swiper>
             </div>
         </div>
+        <div class="level-goods" v-for="(item, index) in goodsList.data" :key="index">
+            <descBars :title="item.name" :showMore="true">
+                <div class="goodsBars">
+                    <span v-for="(temp, o) in item.child" :key="o">{{ temp.name }}</span>
+                </div>
+            </descBars>
+            <homeGoods :goods="item"></homeGoods>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods } from '../api/api-rabbit';
     import swiper from 'custom/swiper.vue';
     import miniGoods from 'custom/miniGoods.vue';
     import miniBrand from 'custom/miniBrand.vue';
     import bigGoods from 'custom/bigGoods.vue';
     import descBars from 'custom/descBars.vue';
+    import homeGoods from 'home/homeGoods.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
 
@@ -253,6 +262,7 @@
 	
 	// 修改type为2的swiper时，右侧的距离值
 	function checkSwiper(num: number){
+        // return 的情况，则是禁用状态
 		if(num == 0 && hotBrandIndex.value == 1){
 			return
 		}
@@ -275,6 +285,8 @@
         getHot();
 		// 获取热门品牌
 		getHotBrand();
+        // 获取商品
+        getGoods();
     })
 
     // 获取首页顶部相关数据
@@ -401,6 +413,57 @@
 			})
 		})
 	}
+
+    interface IGoodsInfo {
+        name: string;
+        desc: string;
+        image: string;
+        price: string;
+    }
+    interface IbarsInfo {
+        name: string;
+    }
+    interface IGoodArray {
+        name: string;
+        image: string;
+        info: string;
+        goods: Array<IGoodsInfo>;
+        child: Array<IbarsInfo>
+    }
+    interface IGoodsListBase {
+        data: Array<IGoodArray>
+    }
+    let goodsList: IGoodsListBase = reactive({data: []});
+    // 获取首页商品
+    function getGoods(){
+        getIndexGoods().then(res => {
+            res.data.result.forEach((item: any) => {
+                let goodsObj: IGoodArray = {
+                    name: item.name,
+                    info: item.saleInfo,
+                    image: item.picture,
+                    goods: [],
+                    child: []
+                };
+                item.children.forEach((temp: any) => {
+                    let childObj: IbarsInfo = {
+                        name: temp.name
+                    }
+                    goodsObj.child.push(childObj);
+                })
+                item.goods.forEach((temp: any) => {
+                    let goodObj: IGoodsInfo = {
+                        name: temp.name,
+                        desc: temp.desc,
+                        image: temp.picture,
+                        price: temp.price,
+                    }
+                    goodsObj.goods.push(goodObj);
+                })
+                goodsList.data.push(goodsObj)
+            })
+        })
+    }
 </script>
 
 <style scoped>
@@ -659,6 +722,29 @@
 	.btn-content {
 		font-size: 12px;
 	}
+    .level-goods {
+        width: 1240px;
+        display: flex;
+        padding: 0;
+        margin: 0;
+        flex-direction: column;
+    }
+    .goodsBars {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        padding-right: 80px;
+    }
+    .goodsBars span {
+        padding: 2px 12px;
+        font-size: 16px;
+        border-radius: 4px;
+        color: #333333;
+    }
+    .goodsBars span:hover {
+        background-color: #27ba9b;
+        color: #ffffff;
+    }
     .fs-16 {
         font-size: 16px;
     }
