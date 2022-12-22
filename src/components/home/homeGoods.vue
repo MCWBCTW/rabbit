@@ -3,18 +3,18 @@
         <div class="imageinfo">
             <img :src="goods.image">
             <div class="info">
-                <div class="left">
-                    {{ goods.name }}馆
-                </div>
-                <div class="right">
-                    {{ goods.info }}
-                </div>
+                <div class="left">{{ goods.name }}馆</div>
+                <div class="right">{{ goods.info }}</div>
             </div>
+        </div>
+        <div class="goodsbox">
+            <bigGoods v-for="(item, o) in goods.goods" :key="o" :goods="item" :type="3"></bigGoods>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+    import bigGoods from 'custom/bigGoods.vue';
     const props = defineProps({
         goods: {
             type: Object,
@@ -71,5 +71,13 @@
         box-sizing: border-box;
         font-weight: 400;
         overflow: hidden;
+    }
+    .goodsbox {
+        width: 990px;
+        height: 610px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 </style>

@@ -71,7 +71,6 @@
         </div>
         <descBars :title="'新鲜好物'" :subtitle="'新鲜出炉 品质靠谱'" :showMore="true"></descBars>
         <div class="level">
-            <!-- 问题应该就是处在这个组件 -->
             <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
         </div>
         <descBars :title="'人气推荐'" :subtitle="'人气爆款 不容错过'"></descBars>

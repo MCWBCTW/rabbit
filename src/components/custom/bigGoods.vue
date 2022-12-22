@@ -1,23 +1,32 @@
 <template>
     <div class="goods-1" v-if="type == 1">
-        <!-- 问题应该是这个图片，注释掉这个，就不会有，但是不知道为什么，只是设置了宽高，也没有超出外层盒子，图片设置小一些也没用 -->
-        <!-- <img class="image-1" :src="goods.image"> -->
         <img class="image-1" :src="goods.image">
         <div class="info-1" :style="{backgroundColor: `${infoBG}`}">
             <div class="title-1">{{goods.desc}}</div>
             <span class="price-1" :style="{color: `${priceColor}`}">￥{{goods.price}}</span>
         </div>
     </div>
-    <div class="goods-1" v-if="type == 2">
+    <div class="goods-1" v-else-if="type == 2">
         <img class="image-1" :src="goods.image">
         <div class="info-1" :style="{backgroundColor: `${infoBG}`}">
             <div class="title-1">{{goods.title}}</div>
             <span class="desc-1" :style="{color: `${priceColor}`}">{{goods.desc}}</span>
         </div>
     </div>
+    <div class="goods-3" v-else-if="type == 3" @mouseenter="goodsEnter" @mouseout="goodsOut">
+        <img :src="goods.image">
+        <p class="name-3">{{ goods.name }}</p>
+        <p class="desc-3">{{ goods.desc }}</p>
+        <div class="price-3">￥{{ goods.price }}</div>
+        <div class="hoverbox" :class="hoverFlag ? 'goodsHover' : 'goodsOut'">
+
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
+    import { ref } from 'vue';
+    import type { Ref } from 'vue'
     const props = defineProps({
         // 商品显示类型
         type: {
@@ -40,6 +49,15 @@
             default: '#333333'
         }
     })
+
+    let hoverFlag: Ref<boolean> = ref(false);
+    // 鼠标移入商品
+    function goodsEnter(){
+        hoverFlag.value = true;
+    }
+    function goodsOut(){
+        hoverFlag.value = false;
+    }
 </script>
 
 <style scoped>
@@ -82,5 +100,68 @@
 }
 .desc-1 {
     font-size: 18px;
+}
+
+.goods-3 {
+    width: 240px;
+    height: 300px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 30px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all .3s linear;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+.goods-3:hover {
+    border: 1px solid #27ba9b;
+}
+.goods-3 img {
+    width: 160px;
+    height: 160px;
+}
+.name-3 {
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 16px;
+    height: 44px;
+    word-break: break-all;
+    line-clamp: 2;
+}
+.desc-3 {
+    width: 180px;
+    height: 22px;
+    color: #666666;
+    margin-top: 6px;
+    margin-bottom: 0;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.price-3 {
+    width: 180px;
+    font-size: 20px;
+    color: #cf4444;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+.hoverbox {
+    width: 238px;
+    height: 86px;
+    background-color: #27ba9b;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+.goodsHover {
+    bottom: 0;
+}
+.goodsOut {
+    bottom: -86px;
 }
 </style>
