@@ -13,13 +13,14 @@
             <span class="desc-1" :style="{color: `${priceColor}`}">{{goods.desc}}</span>
         </div>
     </div>
-    <div class="goods-3" v-else-if="type == 3" @mouseenter="goodsEnter" @mouseout="goodsOut">
+    <div class="goods-3" v-else-if="type == 3" @mouseover="goodsEnter" @mouseout="goodsOut">
         <img :src="goods.image">
         <p class="name-3">{{ goods.name }}</p>
         <p class="desc-3">{{ goods.desc }}</p>
         <div class="price-3">￥{{ goods.price }}</div>
         <div class="hoverbox" :class="hoverFlag ? 'goodsHover' : 'goodsOut'">
-
+            <span class="hoverbox-title">找相似</span>
+            <span class="hoverbox-sub">发现更多宝贝 ></span>
         </div>
     </div>
 </template>
@@ -112,7 +113,7 @@
     padding: 10px 30px;
     box-sizing: border-box;
     cursor: pointer;
-    transition: all .3s linear;
+    transition: all .4s ease-out;
     border: 1px solid transparent;
     position: relative;
     overflow: hidden;
@@ -156,12 +157,28 @@
     background-color: #27ba9b;
     display: flex;
     flex-direction: column;
+    align-items: center;
     position: absolute;
+}
+.hoverbox-title {
+    font-size: 18px;
+    border-bottom: 1px solid #fff;
+    line-height: 40px;
+    padding: 0 40px;
+    margin-top: 5px;
+    color: #ffffff;
+}
+.hoverbox-sub {
+    font-size: 14px;
+    color: #ffffff;
+    margin-top: 5px;
 }
 .goodsHover {
     bottom: 0;
+    transition: all .4s ease-out;
 }
 .goodsOut {
+    transition: all .4s ease-out;
     bottom: -86px;
 }
 </style>

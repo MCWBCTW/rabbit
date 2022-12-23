@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3780072 */
-  src: url('iconfont.woff2?t=1669018981205') format('woff2'),
-       url('iconfont.woff?t=1669018981205') format('woff'),
-       url('iconfont.ttf?t=1669018981205') format('truetype');
+  src: url('iconfont.woff2?t=1671804345946') format('woff2'),
+       url('iconfont.woff?t=1671804345946') format('woff'),
+       url('iconfont.ttf?t=1671804345946') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,50 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-xinlangweibo:before {
+  content: "\e600";
+}
+
+.icon-xiangyoujiantou:before {
+  content: "\e65f";
+}
+
+.icon-hezi:before {
+  content: "\e60b";
+}
+
+.icon-WeChat:before {
+  content: "\e624";
+}
+
+.icon-wode:before {
+  content: "\e607";
+}
+
+.icon-24gl-thumbsUp2:before {
+  content: "\eb32";
+}
+
+.icon-aixin:before {
+  content: "\e83f";
+}
+
+.icon-kefu:before {
+  content: "\e625";
+}
+
+.icon-jiaotonggongju_jiaotonggongju-huoche-21:before {
+  content: "\e680";
+}
+
+.icon-chakan:before {
+  content: "\e636";
+}
+
+.icon-gerenzhongxin-wentifankui:before {
+  content: "\e605";
 }
 
 .icon-xiangzuo1:before {

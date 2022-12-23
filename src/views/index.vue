@@ -102,11 +102,16 @@
             </descBars>
             <homeGoods :goods="item"></homeGoods>
         </div>
+        <div class="greyLine">
+            <div class="level">
+                <descBars :title="'最新专题'" :showMore="true"></descBars>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods } from '../api/api-rabbit';
+    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../api/api-rabbit';
     import swiper from 'custom/swiper.vue';
     import miniGoods from 'custom/miniGoods.vue';
     import miniBrand from 'custom/miniBrand.vue';
@@ -286,6 +291,8 @@
 		getHotBrand();
         // 获取商品
         getGoods();
+        // 获取专题
+        getNewSpecial();
     })
 
     // 获取首页顶部相关数据
@@ -461,6 +468,16 @@
                 })
                 goodsList.data.push(goodsObj)
             })
+        })
+    }
+
+    // 获取最新专题
+    function getNewSpecial(){
+        getIndexSpecial().then(res => {
+            console.log(res);
+            // res.data.result.forEach((item: any) => {
+
+            // })
         })
     }
 </script>
