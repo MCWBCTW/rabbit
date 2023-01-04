@@ -106,6 +106,9 @@
             <div class="level">
                 <descBars :title="'最新专题'" :showMore="true"></descBars>
             </div>
+            <div class="level">
+                <homeSpecial v-for="(item, o) in specialArray.data" :key="o" :special="item"></homeSpecial>
+            </div>
         </div>
     </div>
 </template>
@@ -118,9 +121,10 @@
     import bigGoods from 'custom/bigGoods.vue';
     import descBars from 'custom/descBars.vue';
     import homeGoods from 'home/homeGoods.vue';
+    import homeSpecial from 'home/homeSpecial.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
-
+    // import { UsersStore } from '../store/user'
     // 横栏项数据接口
     interface IcrossBase {
         data: Array<Icross>
@@ -471,13 +475,36 @@
         })
     }
 
+    // 首页专题详细数据模板
+    interface ISpecial {
+        collect: number; // 收藏数量
+        view: number; // 在看数量
+        reply: number; // 评论数量
+        image: string;
+        desc: string;
+        title: string;
+        price: number;
+    }
+    // 专题数据模板
+    interface ISpecialBase {
+        data: Array<ISpecial>
+    }
+    let specialArray: ISpecialBase = reactive({data: []})
     // 获取最新专题
     function getNewSpecial(){
         getIndexSpecial().then(res => {
-            console.log(res);
-            // res.data.result.forEach((item: any) => {
-
-            // })
+            res.data.result.forEach((item: any) => {
+                let specialObj: ISpecial = {
+                    collect: item.collectNum,
+                    view: item.viewNum,
+                    reply: item.replyNum,
+                    image: item.cover,
+                    desc: item.summary,
+                    title: item.title,
+                    price: item.lowestPrice,
+                }
+                specialArray.data.push(specialObj)
+            })
         })
     }
 </script>
@@ -733,7 +760,8 @@
         width: 100%;
         background-color: #f5f5f5;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 	.btn-content {
 		font-size: 12px;
