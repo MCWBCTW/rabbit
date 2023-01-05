@@ -102,7 +102,7 @@
             </descBars>
             <homeGoods :goods="item"></homeGoods>
         </div>
-        <div class="greyLine">
+        <div class="greyLine padB-30">
             <div class="level">
                 <descBars :title="'最新专题'" :showMore="true"></descBars>
             </div>
@@ -794,5 +794,8 @@
     }
     .fs-14 {
         font-size: 14px;
+    }
+    .padB-30 {
+        padding-bottom: 30px;
     }
 </style>
