@@ -110,6 +110,7 @@
                 <homeSpecial v-for="(item, o) in specialArray.data" :key="o" :special="item"></homeSpecial>
             </div>
         </div>
+        <bottomInfo></bottomInfo>
     </div>
 </template>
 
@@ -120,6 +121,7 @@
     import miniBrand from 'custom/miniBrand.vue';
     import bigGoods from 'custom/bigGoods.vue';
     import descBars from 'custom/descBars.vue';
+    import bottomInfo from 'custom/bottomInfo.vue';
     import homeGoods from 'home/homeGoods.vue';
     import homeSpecial from 'home/homeSpecial.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
