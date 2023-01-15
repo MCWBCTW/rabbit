@@ -110,7 +110,13 @@
                 <homeSpecial v-for="(item, o) in specialArray.data" :key="o" :special="item"></homeSpecial>
             </div>
         </div>
+        <watchShowAndHide :discern="'one'" @appear="comAppear" @disappear="domDisappear">
+            <div style="width: 100px;height: 100px;background-color: blue;"></div>
+        </watchShowAndHide>
         <bottomInfo></bottomInfo>
+        <watchShowAndHide :discern="'two'" @appear="comAppear" @disappear="domDisappear">
+            <div style="width: 100px;height: 100px;background-color: red;"></div>
+        </watchShowAndHide>
     </div>
 </template>
 
@@ -122,6 +128,7 @@
     import bigGoods from 'custom/bigGoods.vue';
     import descBars from 'custom/descBars.vue';
     import bottomInfo from 'custom/bottomInfo.vue';
+    import watchShowAndHide from 'custom/watchShowAndHide.vue';
     import homeGoods from 'home/homeGoods.vue';
     import homeSpecial from 'home/homeSpecial.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
@@ -509,8 +516,23 @@
             })
         })
     }
+
+
+    function comAppear(discern: string){
+        console.log('测试组件显示了', discern)
+    }
+
+    function domDisappear(discern: string){
+        console.log('测试组件隐藏了', discern)
+    }
 </script>
 
+<script lang="ts">
+    
+    setTimeout(() => {
+        
+    }, 2000)
+</script>
 <style scoped>
     .index {
         width: 100%;

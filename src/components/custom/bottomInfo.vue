@@ -42,9 +42,43 @@
                     </div>
                 </div>
             </div>
+            <div class="box-4">
+                <span class="title">服务热线</span>
+                <div class="vertical">
+                    <span class="phone">187-8101-0339</span>
+                    <span class="time">周一至周日9:00-18:00</span>
+                </div>
+            </div>
         </div>
         <div class="bottom">
-            
+            <div class="slogan">
+                <div class="sloganbox">
+                    <span class="iconfont icon-hezi logo"></span>
+                    <span class="slogandesc">价格亲民</span>
+                </div>
+                <div class="sloganbox">
+                    <span class="iconfont icon-24gl-thumbsUp2 logo2"></span>
+                    <span class="slogandesc">物流快捷</span>
+                </div>
+                <div class="sloganbox">
+                    <span class="iconfont icon-jiaotonggongju_jiaotonggongju-huoche-21 logo2"></span>
+                    <span class="slogandesc">品质新鲜</span>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="level3">
+                    <div class="copyright-text b-r">关于我们</div>
+                    <div class="copyright-text b-r">帮助中心</div>
+                    <div class="copyright-text b-r">售后服务</div>
+                    <div class="copyright-text b-r">配送与验收</div>
+                    <div class="copyright-text b-r">商务合作</div>
+                    <div class="copyright-text b-r">搜索推荐</div>
+                    <div class="copyright-text">友情链接</div>
+                </div>
+                <div class="level3 m-t">
+                    <div class="copyright-text">CopyRight © 小兔鲜儿</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -72,6 +106,7 @@
         height: 348px;
         display: flex;
         flex-direction: column;
+        align-items: center;
         background-color: #333333;
     }
     .box-1 {
@@ -114,6 +149,15 @@
         align-items: center;
         justify-content: space-around;
     }
+    .box-4 {
+        width: 196px;
+        height: 190px;
+        padding-left: 72px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
     .title {
         font-size: 18px;
         color: #999999;
@@ -129,6 +173,21 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+    }
+    .vertical {
+        width: 196px;
+        padding-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .time {
+        font-size: 15px;
+        color: #999;
+    }
+    .phone {
+        font-size: 22px;
+        color: #666;
     }
     .box {
         width: 92px;
@@ -175,5 +234,64 @@
         align-items: center;
         justify-content: center;
         font-size: 14px;
+    }
+    .slogan {
+        width: 1240px;
+        height: 178px;
+        border-bottom: 1px solid #434343;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .sloganbox {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .logo {
+        font-size: 50px;
+        color: #333333;
+        background-color: #ffffff;
+        border-radius: 100px;
+    }
+    .logo2 {
+        font-size: 30px;
+        font-weight: bold;
+        padding: 8px;
+        color: #ffffff;
+        border: 2px solid #ffffff;
+        border-radius: 100px;
+    }
+    .slogandesc {
+        font-size: 28px;
+        color: #ffffff;
+        margin-left: 10px;
+    }
+    .copyright {
+        width: 1240px;
+        height: 170px;
+        padding-top: 40px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .level3 {
+        width: 1240px;
+        display: flex;
+        justify-content: center;
+    }
+    .copyright-text {
+        font-size: 15px;
+        color: #999999;
+        padding: 0 10px;
+        cursor: pointer;
+    }
+    .b-r {
+        border-right: 1px solid #999999;
+    }
+    .m-t {
+        margin-top: 20px;
     }
 </style>
