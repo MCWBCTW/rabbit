@@ -6,6 +6,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Index',
         component: () => import('../views/index.vue') // 建议进行路由懒加载，优化访问性能
     },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../views/login.vue')
+  },
 ]
  
 const router = createRouter({

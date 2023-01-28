@@ -76,7 +76,7 @@
                     <div class="copyright-text">友情链接</div>
                 </div>
                 <div class="level3 m-t">
-                    <div class="copyright-text">CopyRight © 小兔鲜儿</div>
+                    <div class="copyright-text">CopyRight © lzx</div>
                 </div>
             </div>
         </div>
@@ -198,6 +198,9 @@
         align-items: center;
         border: 1px solid #ededed;
     }
+    .box:hover .iconfont{
+        color: #27ba9b;
+    }
     .box img {
         width: 76px;
         height: 76px;
@@ -234,6 +237,7 @@
         align-items: center;
         justify-content: center;
         font-size: 14px;
+        cursor: pointer;
     }
     .slogan {
         width: 1240px;

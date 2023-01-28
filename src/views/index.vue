@@ -1,17 +1,29 @@
 <template>
     <div class="index">
-        <div class="head">
-            <div class="titlebox">
-                <span class="title">请先登录</span>
-                <span class="title bor-l">免费注册</span>
-                <span class="title bor-l">我的订单</span>
-                <span class="title bor-l">会员中心</span>
-                <span class="title bor-l">帮助中心</span>
-                <span class="title bor-l">关于我们</span>
-                <div class="title bor-l">
-                    <span class="iconfont icon-shouji icon"></span>
-                    <span>手机版</span>
+        <watchShowAndHide style="width: 100%;" @appear="headAppear" @disappear="headDisappear">
+            <div class="head">
+                <div class="titlebox">
+                    <span class="title" @click="toLogin">请先登录</span>
+                    <span class="title bor-l">免费注册</span>
+                    <span class="title bor-l">我的订单</span>
+                    <span class="title bor-l">会员中心</span>
+                    <span class="title bor-l">帮助中心</span>
+                    <span class="title bor-l">关于我们</span>
+                    <div class="title bor-l">
+                        <span class="iconfont icon-shouji icon"></span>
+                        <span>手机版</span>
+                    </div>
                 </div>
+            </div>
+        </watchShowAndHide>
+        <div :class="showTop ? 'top-floor top-hide' : 'top-floor top-show'">
+            <div class="top-content">
+                <img class="headImage2" src="/images/index_logo.png">
+                <span class="barsText marL-40">首页</span>
+                <span class="barsText marL-40" v-for="(item, index) in crossBarArray.data" :key="index">{{item.title}}</span>
+                <span class="barsText2 marL-40">|</span>
+                <span class="barsText marL-40">品牌</span>
+                <span class="barsText marL-40">专题</span>
             </div>
         </div>
         <div class="bars">
@@ -127,6 +139,9 @@
     import homeSpecial from 'home/homeSpecial.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
+    import { useRouter } from "vue-router"
+    const router = useRouter()
+
     // import { UsersStore } from '../store/user'
     // 横栏项数据接口
     interface IcrossBase {
@@ -283,6 +298,19 @@
 		hotBrandIndex.value = hotBrandIndex.value == 1 ? 2 : 1;
 		paddingDistance.value = num;
 	}
+
+    
+    let showTop: Ref<boolean> = ref(false);
+    // 头部区域显示
+    function headAppear(){
+        showTop.value = true;
+    }
+
+    // 头部区域隐藏
+    function headDisappear(){
+        showTop.value = false;
+    }
+
     onBeforeMount(() => {
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
@@ -510,14 +538,19 @@
             })
         })
     }
+
+
+
+
+
+    
+    // 避免所有逻辑数据都放在一起，过于杂乱，下方均为用户操作前往其他页面的逻辑 
+    // 前往登录页面
+    function toLogin(){
+        router.push({ path:'/login'})
+    }
 </script>
 
-<script lang="ts">
-    
-    setTimeout(() => {
-        
-    }, 2000)
-</script>
 <style scoped>
     .index {
         width: 100%;
@@ -525,6 +558,30 @@
         flex-direction: column;
         align-items: center;
         user-select: none;
+    }
+    .top-floor {
+        width: 100%;
+        height: 80px;
+        background-color: #ffffff;
+        position: fixed;
+        display: flex;
+        justify-content: center;
+    }
+    .top-hide {
+        top: -80px;
+        z-index: 999;
+        transition: all .2s;
+    }
+    .top-show {
+        top: 0;
+        z-index: 999;
+        transition: all .2s;
+    }
+    .top-content {
+        width: 1240px;
+        height: 80px;
+        display: flex;
+        align-items: center;
     }
     /* 顶部标题 */
     .head {
@@ -578,6 +635,11 @@
         height: 132px;
         cursor: pointer;
     }
+    .headImage2 {
+        height: 80px;
+        cursor: pointer;
+        margin-left: 40px;
+    }
     .textbox {
         width: 820px;
         display: flex;
@@ -589,6 +651,13 @@
         line-height: 32px;
         color: #333333;
         cursor: pointer;
+    }
+    .barsText2 {
+        font-size: 16px;
+        line-height: 32px;
+        color: #27ba9b;
+        cursor: pointer;
+        font-weight: 600;
     }
     .barsText:hover {
         color: #27ba9b;
@@ -806,5 +875,8 @@
     }
     .padB-30 {
         padding-bottom: 30px;
+    }
+    .marL-40 {
+        margin-left: 40px;
     }
 </style>
