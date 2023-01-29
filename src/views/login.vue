@@ -4,7 +4,7 @@
             <img class="headImage" src="/images/index_logo.png">
             <div class="titlebox">
                 <span class="title">欢迎登录</span>
-                <div class="subtitle">
+                <div class="subtitle" @click="goHome">
                     <span>进入网站首页</span>
                     <span class="toR iconfont icon-xiangyoujiantou"></span>
                     <span class="toR iconfont icon-xiangyoujiantou"></span>
@@ -29,11 +29,48 @@
                         <input type="password" v-model="form.password" @focus="passInputFocus" @blur="passInputBlur">
                     </div>
                     <div class="clause">
-                        <div class="checkbox">
-                            
+                        <div class="checkbox" :style="{border: `${form.agree ? '1px solid #27ba9b' : '1px solid #333333'}`}" @click="check">
+                            <span v-if="form.agree">√</span>
                         </div>
+                        <span>我已同意</span>
+                        <span class="link">《隐私条款》</span>
+                        <span>和</span>
+                        <span class="link">《服务条款》</span>
+                    </div>
+                    <div class="warn" v-if="!form.agree">
+                        <div class="warnbox">
+                            <span>!</span>
+                        </div>
+                        <span class="warntext">请勾选登录协议</span>
+                    </div>
+                    <div class="btn" @click="login">
+                        <span>登录</span>
                     </div>
                 </div>
+                <div class="line">
+                    <span>忘记密码</span>
+                    <span>免费注册</span>
+                </div>
+            </div>
+        </div>
+        <div class="info">
+            <div class="info-line cur">
+                <span>关于我们</span>
+                <p>|</p>
+                <span>帮助中心</span>
+                <p>|</p>
+                <span>售后服务</span>
+                <p>|</p>
+                <span>配送与验收</span>
+                <p>|</p>
+                <span>商务合作</span>
+                <p>|</p>
+                <span>搜索推荐</span>
+                <p>|</p>
+                <span>友情链接</span>
+            </div>
+            <div class="info-line">
+                <span>CopyRight © lzx</span>
             </div>
         </div>
     </div>
@@ -42,7 +79,8 @@
 
 <script setup lang="ts">
     import { reactive, ref, Ref } from "@vue/reactivity";
-
+    import { useRouter } from "vue-router"
+    const router = useRouter()
     // 限制表单数据内容
     interface IformBase {
         user: string;
@@ -51,8 +89,8 @@
     }
 
     let form: IformBase = reactive({
-        user: '',
-        password: '',
+        user: 'copyxtxr001',
+        password: 'Aa123456',
         agree: true
     });
 
@@ -75,6 +113,23 @@
     function passInputBlur(){
         passFocusFlag.value = false;
     }
+
+    // 修改同意状态
+    function check(){
+        form.agree = !form.agree;
+    }
+
+    // 前往首页
+    function goHome(){
+        router.push({ path:'/'})
+    }
+
+    // 登录
+    function login(){
+        if(form.agree){
+            router.push({ name:'Index', params: {userId: '123'}})
+        }
+    }
 </script>
 
 
@@ -83,6 +138,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        user-select: none;
     }
     .head {
         width: 1240px;
@@ -115,6 +171,7 @@
         font-size: 16px;
         display: flex;
         align-items: center;
+        cursor: pointer;
     }
     .toR {
         font-size: 14px;
@@ -151,8 +208,9 @@
         height: 220px;
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: space-between;
+        padding: 0 40px;
+        box-sizing: border-box;
     }
     .inputbox {
         width: 300px;
@@ -181,6 +239,96 @@
     }
     .clause {
         display: flex;
+        align-items: center;
+        font-size: 14px;
+    }
+    .checkbox {
+        width: 12px;
+        height: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #27ba9b;
+        cursor: pointer;
+        margin-right: 4px;
+    }
+    .link {
+        color: #006699;
+        cursor: pointer;
+    }
+    .btn {
+        width: 300px;
+        height: 40px;
+        background-color: #27ba9b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #ffffff;
+        cursor: pointer;
+    }
+    .line {
+        width: 380px;
+        height: 64px;
+        padding: 0 40px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        font-size: 14px;
+        color: #999999;
+    }
+    .line span {
+        margin-left: 8px;
+        cursor: pointer;
+    }
+    .info {
+        width: 100%;
+        height: 140px;
+        padding: 20px 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+    .info-line {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: #999999;
+    }
+    .info-line p {
+        margin: 0 8px;
+        color: #cccccc;
+    }
+    .warn {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        bottom: 134px;
+    }
+    .warnbox {
+        width: 14px;
+        height: 14px;
+        background-color: #cf4444;
+        color: #ffffff;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        margin-right: 4px;
+    }
+    .warntext {
+        color: #cf4444;
+        font-size: 12px;
+    }
+    .cur {
+        cursor: pointer;
     }
     .marT-30 {
         margin-top: 30px;

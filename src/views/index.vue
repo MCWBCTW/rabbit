@@ -139,9 +139,11 @@
     import homeSpecial from 'home/homeSpecial.vue';
     import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
-    import { useRouter } from "vue-router"
-    const router = useRouter()
+    import { useRouter, useRoute } from "vue-router"
 
+    import { encryption } from '../utils/tools'
+    console.log(encryption('test'))
+    const router = useRouter();
     // import { UsersStore } from '../store/user'
     // 横栏项数据接口
     interface IcrossBase {
@@ -543,7 +545,7 @@
 
 
 
-    
+
     // 避免所有逻辑数据都放在一起，过于杂乱，下方均为用户操作前往其他页面的逻辑 
     // 前往登录页面
     function toLogin(){
