@@ -130,10 +130,13 @@
     import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../api/api-rabbit';
     import type { Ref } from 'vue'
     import { useRouter, useRoute } from "vue-router"
+    import { decryptObj } from '../utils/tools'
 
-    import { encryption } from '../utils/tools'
-    console.log(encryption('test'))
     const router = useRouter();
+    const route = useRoute();
+    console.log(decryptObj(route.query))
+
+
     // import { UsersStore } from '../store/user'
     // 横栏项数据接口
     interface IcrossBase {
@@ -143,7 +146,7 @@
     // 横栏项
     interface Icross {
         title: string;
-        id: number
+        id: number;
     }
     // 横栏项内容
     let crossBarArray:IcrossBase = reactive({data: []});

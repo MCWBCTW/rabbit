@@ -78,8 +78,11 @@
 
 
 <script setup lang="ts">
-    import { reactive, ref, Ref } from "@vue/reactivity";
     import { useRouter } from "vue-router"
+    import type { Ref } from 'vue'
+
+    import { encryptionObj } from '../utils/tools'
+
     const router = useRouter()
     // 限制表单数据内容
     interface IformBase {
@@ -127,7 +130,7 @@
     // 登录
     function login(){
         if(form.agree){
-            router.push({ name:'Index', params: {userId: '123'}})
+            router.push({ path:'/', query: encryptionObj({user: form.user, password: form.password})})
         }
     }
 </script>
