@@ -128,16 +128,6 @@
 
 <script setup lang="ts">
     import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../api/api-rabbit';
-    import swiper from 'custom/swiper.vue';
-    import miniGoods from 'custom/miniGoods.vue';
-    import miniBrand from 'custom/miniBrand.vue';
-    import bigGoods from 'custom/bigGoods.vue';
-    import descBars from 'custom/descBars.vue';
-    import bottomInfo from 'custom/bottomInfo.vue';
-    import watchShowAndHide from 'custom/watchShowAndHide.vue';
-    import homeGoods from 'home/homeGoods.vue';
-    import homeSpecial from 'home/homeSpecial.vue';
-    import { onBeforeMount, reactive, ref } from 'vue';
     import type { Ref } from 'vue'
     import { useRouter, useRoute } from "vue-router"
 
