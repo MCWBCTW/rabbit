@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     HomeSpecial: typeof import('./src/components/home/homeSpecial.vue')['default']
     MiniBrand: typeof import('./src/components/custom/miniBrand.vue')['default']
     MiniGoods: typeof import('./src/components/custom/miniGoods.vue')['default']
+    Popup: typeof import('./src/components/custom/popup.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Swiper: typeof import('./src/components/custom/swiper.vue')['default']

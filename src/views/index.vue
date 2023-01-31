@@ -134,9 +134,7 @@
 
     const router = useRouter();
     const route = useRoute();
-    console.log(decryptObj(route.query))
-
-
+    
     // import { UsersStore } from '../store/user'
     // 横栏项数据接口
     interface IcrossBase {

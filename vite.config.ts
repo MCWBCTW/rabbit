@@ -30,6 +30,7 @@ export default defineConfig({
       // 配置公共组件引用路径，现已使用插件，不再手动引入组件，但此配置依然保留
       custom: resolve(__dirname, 'src/components/custom'),
       home: resolve(__dirname, 'src/components/home'),
+      '@': resolve(__dirname, 'src'),
       // 配置静态图片引用路径
       '/images': './src/assets/images'
     }

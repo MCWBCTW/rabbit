@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="bg-box">
-            <img class="bg-image" src="/images/login/login-bg.png">
+            <!-- <img class="bg-image" src="/images/login/login-bg.png"> -->
             <div class="login-box">
                 <span class="login-title">账户登录</span>
                 <div class="form marT-30">
@@ -183,10 +183,11 @@
     .bg-box {
         width: 100%;
         height: 488px;
+        min-width: 1240px;
         position: relative;
+        background: url(../images/login/login-bg.png) no-repeat 50%/cover;
     }
     .bg-image {
-        width: 100%;
         height: 488px;
     }
     .login-box {
@@ -195,7 +196,8 @@
         background-color: #ffffff;
         position: absolute;
         bottom: 34px;
-        right: 25%;
+        left: 50%;
+        transform: translate3d(100px,0,0);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -288,6 +290,7 @@
     }
     .info {
         width: 100%;
+        min-width: 1240px;
         height: 140px;
         padding: 20px 0;
         box-sizing: border-box;
@@ -298,6 +301,7 @@
     }
     .info-line {
         width: 100%;
+        min-width: 1240px;
         display: flex;
         justify-content: center;
         align-items: center;

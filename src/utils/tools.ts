@@ -99,3 +99,46 @@ export function decryptObj(origin: any){
     }
     return result
 }
+
+// 存放全局监听函数的对象，健 为监听函数的名称，值 为所触发的函数体
+const totalEvent: any = {};
+
+/**
+ * 
+ * @param name 注册全局监听函数的名称
+ * @param fun 全局监听函数的函数体，触发时执行的内容
+ * @returns 存在重复监听函数时返回错误信息
+ */
+export function $on(name: string, fun: Function){
+    if(totalEvent[name]){
+        return console.error(new Error('函数名称重复'));
+    }
+    totalEvent[name] = fun;
+}
+
+/**
+ * 
+ * @param name 触发全局监听函数的名称
+ * @param data 触发时所携带的参数
+ * @returns 不存在已注册的全局监听函数，返回错误信息
+ */
+export function $emit(name: string, data?: any){
+    if(totalEvent[name]){
+        totalEvent[name](data);
+    } else {
+        return console.error(new Error('当前全局监听函数不存在，请注册后使用'));
+    }
+}
+
+/**
+ * 
+ * @param name 需要清除的全局监听函数名称
+ * @returns 监听函数不存在时，返回错误信息
+ */
+export function $off(name: string){
+    if(totalEvent[name]){
+        delete totalEvent[name];
+    } else {
+        return console.error(new Error('清除的全局监听函数不存在'));
+    }
+}
