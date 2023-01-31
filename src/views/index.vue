@@ -92,10 +92,10 @@
         <div class="greyLine">
             <descBars :title="'热门品牌'" :subtitle="'国际经典 品质保证'">
                 <div class="desc-right">
-                    <div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 1 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 1 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(0)">
+                    <div class="right-btn" :class="hotBrandIndex == 1 ? 'disa' : 'unban'" @click="checkSwiper(0)">
                         <span class="iconfont icon-xiangzuo1 btn-content"></span>
                     </div>
-                    <div class="right-btn" :style="{backgroundColor: `${hotBrandIndex == 2 ? '#cccccc' : '#27ba9b'}`, cursor: `${hotBrandIndex == 2 ? 'no-drop' : 'pointer'}`}" @click="checkSwiper(1240)">
+                    <div class="right-btn" :class="hotBrandIndex == 2 ? 'disa' : 'unban'" @click="checkSwiper(1240)">
                         <span class="iconfont icon-xiangyou btn-content"></span>
                     </div>
                 </div>
@@ -859,6 +859,14 @@
     .goodsBars span:hover {
         background-color: #27ba9b;
         color: #ffffff;
+    }
+    .disa {
+        background-color: #cccccc;
+        cursor: no-drop;
+    }
+    .unban {
+        background-color: #27ba9b;
+        cursor: pointer;
     }
     .fs-16 {
         font-size: 16px;
