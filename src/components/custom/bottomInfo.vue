@@ -31,7 +31,7 @@
                 <span class="title">下载APP</span>
                 <div class="level2">
                     <div class="box">
-                        <img src="src/assets/images/home/QRcode.jpg">
+                        <img src="/src/assets/images/home/QRcode.jpg">
                     </div>
                     <div class="box2">
                         <span class="desc">扫描二维码</span>
