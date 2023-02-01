@@ -4,7 +4,7 @@
             <div class="head">
                 <div class="titlebox">
                     <span class="title" v-if="!isLogin" @click="toLogin">请先登录</span>
-                    <span class="title iconfont icon-shouji icon" v-else @click="toMyCenter">{{ userLoginBase.user }}</span>
+                    <span class="title iconfont icon-jurassic_user icon" v-else @click="toMyCenter">{{ userLoginBase.user }}</span>
                     <span class="title bor-l" v-if="!isLogin">免费注册</span>
                     <span class="title bor-l" v-else @click="toLogin">退出登录</span>
                     <span class="title bor-l">我的订单</span>
@@ -96,6 +96,7 @@
     import type { Ref } from 'vue'
     import { useRouter, useRoute } from "vue-router"
     import { decryptObj } from '../utils/tools'
+import { Console } from 'console';
     // import { UsersStore } from '../store/user'
 
     const router = useRouter();
@@ -111,7 +112,7 @@
         password: '',
     });
     // 当路由参数不为空时，则存在登录的用户，顶部区域显示登录状态
-    if(route.query != {}){
+    if(route.query.user){
         isLogin.value = true;
         let base = decryptObj(route.query); // 由于路由传参时加密了，此处解密
         userLoginBase.user = base.user;
