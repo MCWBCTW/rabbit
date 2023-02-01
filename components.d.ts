@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     BottomInfo: typeof import('./src/components/custom/bottomInfo.vue')['default']
     DescBars: typeof import('./src/components/custom/descBars.vue')['default']
     HomeGoods: typeof import('./src/components/home/homeGoods.vue')['default']
+    Homemiddle: typeof import('./src/components/home/homemiddle.vue')['default']
     HomeSpecial: typeof import('./src/components/home/homeSpecial.vue')['default']
     MiniBrand: typeof import('./src/components/custom/miniBrand.vue')['default']
     MiniGoods: typeof import('./src/components/custom/miniGoods.vue')['default']
