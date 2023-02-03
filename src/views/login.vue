@@ -185,7 +185,7 @@
         height: 488px;
         min-width: 1240px;
         position: relative;
-        background: url(../images/login/login-bg.png) no-repeat 50%/cover;
+        background: url(/images/login/login-bg.png) no-repeat 50%/cover;
     }
     .bg-image {
         height: 488px;
