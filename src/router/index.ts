@@ -4,13 +4,23 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'Index',
-        component: () => import('../views/index.vue') // 建议进行路由懒加载，优化访问性能
+        component: () => import('../views/index.vue'), // 建议进行路由懒加载，优化访问性能
+        children: [
+            {
+                path: '',
+                component: () => import('../views/children/home.vue'),
+            },
+            {
+                path: '/cart',
+                component: () => import('../views/children/cart.vue'),
+            }
+        ]
     },
     {
-      path: '/login',
-      name: 'Login',
-      component: () => import('../views/login.vue')
-  },
+        path: '/login',
+        name: 'Login',
+        component: () => import('../views/login.vue')
+    },
 ]
  
 const router = createRouter({

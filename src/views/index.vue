@@ -32,7 +32,7 @@
             <div class="barsbox">
                 <img class="headImage" src="/images/index_logo.png">
                 <div class="textbox">
-                    <span class="barsText">首页</span>
+                    <span class="barsText" @click="toHome">首页</span>
                     <span class="barsText" v-for="(item, index) in crossBarArray.data" :key="index"
                         @mouseenter="mouseEnter(Number(index)+1)" @mouseleave="mouseLeave(Number(index)+1)">{{item.title}}</span>
                 </div>
@@ -40,7 +40,7 @@
                     <span class="iconfont icon-fangdajing searchLogo"></span>
                     <input type="text" class="searchInput" v-model="keyword" placeholder="搜一搜">
                 </div>
-                <div class="cartbox">
+                <div class="cartbox" @click="toCart">
                     <span class="iconfont icon-gouwuche cartLogo"></span>
                     <div class="cartNum">
                         <span>1</span>
@@ -84,8 +84,9 @@
             </div>
             <swiper :type="1" :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
         </div>
-        <!-- 首页中部区域内容 -->
-        <homemiddle></homemiddle>
+
+        <router-view></router-view>
+
         <!-- 首页底部描述信息内容 -->
         <bottomInfo></bottomInfo>
     </div>
@@ -337,6 +338,16 @@
     // 前往我的个人中心页面
     function toMyCenter(){
         // 仅替换首页中部区域内容即可，路由并未发生改变
+    }
+
+    // 点击购物车按钮，查看购物车信息
+    function toCart(){
+        router.push({ path:'/cart'})
+    }
+
+    // 返回首页
+    function toHome(){
+        router.push({ path:'/'})
     }
 </script>
 
