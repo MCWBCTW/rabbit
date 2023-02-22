@@ -46,7 +46,7 @@
 
 
 <script setup lang="ts">
-    import { getIndexData, getIndexBanner, getBrandData, getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../../api/api-rabbit';
+    import { getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../../api/api-rabbit';
     import type { Ref } from 'vue'
 
     // 获取首页好物
