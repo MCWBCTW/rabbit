@@ -54,37 +54,8 @@
                 </div>
             </div>
         </div>
-        <!-- 轮播图，数据由于和上方菜单栏数据在同一接口下，未抽离至 homemiddle 组件中，但是限时隐藏时与此组件保持一致 -->
-        <div class="swiperbox">
-            <div class="coverbox" @mouseleave="menuBoxMouseOut">
-                <div class="menu">
-                    <div class="menu-line" :style="{backgroundColor: `${activeMenuLine == index ? '#27ba9b' : 'transparent'}`}" 
-                        v-for="(item, index) in menuArray.data" :key="index" @mouseenter="menuLineMouseEnter(index)">
-                        <span class="fs-16">{{item.title}}</span>
-                        <span class="fs-14">{{item.subtitle_1}}</span>
-                        <span class="fs-14">{{item.subtitle_2}}</span>
-                    </div>
-                </div>
-                <div class="menu-con" :style="{display: `${activeMenuLine != -1 ? 'block' : 'none'}`}">
-                    <div class="menu-con">
-                        <div class="title-line">
-                            <span class="title-line-title">{{(activeMenuLine == 9 ? '品牌' : '分类')}}推荐</span>
-                            <span class="title-line-desc">根据您的购买或浏览记录推荐</span>
-                        </div>
-                        <div class="good-box2" v-if="activeMenuLine == 9">
-                            <!-- 品牌推荐 -->
-                            <miniBrand v-for="(item, index) in brandArray.data" :key="index" :goods="item"></miniBrand>
-                        </div>
-                        <div class="good-box" v-else :style="{height: activeMenuLine == 8 ? '270px' : '405px'}">
-                            <!-- 分类推荐 -->
-                            <miniGoods v-for="(item, index) in menuGoodsArray.data[activeMenuLine]" :key="index" :goods="item"></miniGoods>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <swiper :type="1" :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
-        </div>
-
+        
+        <!-- 二级路由，页面中部 -->
         <router-view></router-view>
 
         <!-- 首页底部描述信息内容 -->
@@ -93,7 +64,6 @@
 </template>
 
 <script setup lang="ts">
-    import { getIndexBanner, getBrandData } from '../api/api-rabbit';
     import type { Ref } from 'vue'
     import { useRouter, useRoute } from "vue-router"
     import { decryptObj } from '../utils/tools'
@@ -124,11 +94,7 @@
         // 获取首页顶部的相关数据，菜单栏、横栏等模块的数据
         getHomeTopData();
     })
-    // 获取首页顶部banner图片数据
-    getHomeBanner();
-    // 获取首页品牌数据
-    getBrand();
-
+    
 
     
     let keyword = ref('');
@@ -160,30 +126,19 @@
         hoverIndex.value = -1;
     }
 
-    let activeMenuLine:Ref<number> = ref(-1);
-    // 鼠标移入菜单栏列表，与之下标匹配项背景色修改
-    function menuLineMouseEnter(index: number){
-        activeMenuLine.value = index;
-    }
-
-    // 鼠标移出整体菜单栏
-    function menuBoxMouseOut(){
-        activeMenuLine.value = -1;
-    }
+    
 
 
-
-    interface Ibrand {
+    // 声明横栏弹出框数据接口
+    interface Ibars {
         image: string;
-        place: string;
-        name: string;
-        desc: string;
+        title: string;
     }
-    interface IbrandBase {
-        data: Array<Ibrand>
+    interface IBarsBase {
+        data: Array<Array<Ibars>>
     }
-    // 品牌数据
-    let brandArray: IbrandBase = reactive({data: []});
+    let barsImageArray:IBarsBase = reactive({data: []})
+    
 
 
     
@@ -213,82 +168,17 @@
     // 横栏项内容
     let crossBarArray:IcrossBase = reactive({data: []});
 
-    interface IbannerBase {
-        data: Array<string>
-    }
-    // banner图片地址
-    let imageArray:IbannerBase = reactive({data: []});
-    // 声明菜单栏内容接口
-    interface Imenu {
-        title: string;
-        subtitle_1: string;
-        subtitle_2: string;
-    }
-    interface IMenuBase {
-        data: Array<Imenu>
-    }
-    // 菜单栏内容
-    let menuArray:IMenuBase = reactive({data: []})
-
-    // 声明横栏弹出框数据接口
-    interface Ibars {
-        image: string;
-        title: string;
-    }
-    interface IBarsBase {
-        data: Array<Array<Ibars>>
-    }
-    let barsImageArray:IBarsBase = reactive({data: []})
-
-    interface ImenuGoodsBase {
-        data: Array<Array<ImenuGoods>>
-    }
-    interface ImenuGoods {
-        image: string;
-        title: string;
-        desc: string;
-        price: string;
-    }
-    // 菜单栏右侧弹窗商品数据内容
-    let menuGoodsArray: ImenuGoodsBase = reactive({data: []});
+    
 
     // 获取首页顶部相关数据
     function getHomeTopData(){
-        const { CrossBarArray, MenuArray, BarsImageArray, MenuGoodsArray } = HomeStore();
+        const { CrossBarArray, BarsImageArray } = HomeStore();
         crossBarArray = CrossBarArray;
-        menuArray = MenuArray;
         barsImageArray = BarsImageArray;
-        menuGoodsArray = MenuGoodsArray;
-    }
-
-    // 获取顶部banner
-    function getHomeBanner(){
-        getIndexBanner().then(res => {
-            let banner: Array<string> = [];
-            res.data.result.forEach((item: any) => {
-                banner.push(item.imgUrl)
-            })
-            imageArray.data = banner;
-        })
-    }
-
-    // 获取首页品牌
-    function getBrand(){
-        getBrandData().then(res => {
-            res.data.result.forEach((item: any) => {
-                let brandObj: Ibrand = {
-                    image: item.picture,
-                    place: item.place,
-                    name: item.name,
-                    desc: item.desc,
-                }
-                brandArray.data.push(brandObj)
-            })
-        })
     }
 
 
-
+    
 
     // 避免所有逻辑数据都放在一起，过于杂乱，下方均为用户操作前往其他页面的逻辑 
     // 前往登录页面
@@ -505,76 +395,8 @@
     .hei-0 {
         height: 0px;
     }
-    .swiperbox {
-        position: relative;
-    }
-    .coverbox {
-        width: 250px;
-        height: 500px;
-        position: absolute;
-        display: flex;
-        top: 0;
-        z-index: 98;
-    }
-    .menu {
-        width: 250px;
-        height: 500px;
-        background-color: rgba(0, 0, 0, .7);
-    }
-    .menu-line {
-        width: 250px;
-        height: 50px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding-left: 40px;
-        box-sizing: border-box;
-    }
-    .menu-line span {
-        color: #ffffff;
-        margin-right: 4px;
-    }
-    .menu-con {
-        width: 990px;
-        height: 500px;
-        background-color: rgba(256, 256, 256, .5);
-    }
-    .title-line {
-        width: 960px;
-        height: 82px;
-        margin: 0 15px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-    .title-line-title {
-        font-size: 20px;
-    }
-    .title-line-desc {
-        font-size: 16px;
-        color: #666666;
-    }
-    .good-box {
-        width: 960px;
-        margin: 0 15px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    .good-box2 {
-        width: 960px;
-        height: 390px;
-        margin: 0 15px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    .fs-16 {
-        font-size: 16px;
-    }
-    .fs-14 {
-        font-size: 14px;
-    }
+    
+    
     .marL-40 {
         margin-left: 40px;
     }

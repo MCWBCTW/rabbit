@@ -1,5 +1,34 @@
 <template>
     <div class="index">
+        <div class="swiperbox">
+            <div class="coverbox" @mouseleave="menuBoxMouseOut">
+                <div class="menu">
+                    <div class="menu-line" :style="{backgroundColor: `${activeMenuLine == index ? '#27ba9b' : 'transparent'}`}" 
+                        v-for="(item, index) in menuArray.data" :key="index" @mouseenter="menuLineMouseEnter(index)">
+                        <span class="fs-16">{{item.title}}</span>
+                        <span class="fs-14">{{item.subtitle_1}}</span>
+                        <span class="fs-14">{{item.subtitle_2}}</span>
+                    </div>
+                </div>
+                <div class="menu-con" :style="{display: `${activeMenuLine != -1 ? 'block' : 'none'}`}">
+                    <div class="menu-con">
+                        <div class="title-line">
+                            <span class="title-line-title">{{(activeMenuLine == 9 ? '品牌' : '分类')}}推荐</span>
+                            <span class="title-line-desc">根据您的购买或浏览记录推荐</span>
+                        </div>
+                        <div class="good-box2" v-if="activeMenuLine == 9">
+                            <!-- 品牌推荐 -->
+                            <miniBrand v-for="(item, index) in brandArray.data" :key="index" :goods="item"></miniBrand>
+                        </div>
+                        <div class="good-box" v-else :style="{height: activeMenuLine == 8 ? '270px' : '405px'}">
+                            <!-- 分类推荐 -->
+                            <miniGoods v-for="(item, index) in menuGoodsArray.data[activeMenuLine]" :key="index" :goods="item"></miniGoods>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <swiper :type="1" :width="1240" :height="500" :leftLeft="270" :btnTop="225" :imageArray="imageArray.data" ref="swiperCom"></swiper>
+        </div>
         <descBars :title="'新鲜好物'" :subtitle="'新鲜出炉 品质靠谱'" :showMore="true"></descBars>
         <div class="level">
             <bigGoods v-for="(item, index) in goodsArray.data" :type="1" :key="index" :goods="item" :infoBG="'#f0f9f4'" :priceColor="'#cf4444'"></bigGoods>
@@ -46,7 +75,9 @@
 
 
 <script setup lang="ts">
-    import { getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial } from '../../api/api-rabbit';
+    import { getGoodGoods, getHotGoods, getHotBrandData, getIndexGoods, getIndexSpecial, getBrandData, getIndexBanner } from '../../api/api-rabbit';
+    import { HomeStore } from '../../store/home'
+
     import type { Ref } from 'vue'
 
     // 获取首页好物
@@ -59,6 +90,106 @@
 	getHotBrand();
     // 获取商品
     getGoods();
+    // 获取首页品牌数据
+    getBrand();
+    // 获取首页顶部banner图片数据
+    getHomeBanner();
+
+    onMounted(() => {
+        getHomeTopData();
+    })
+
+    // 声明菜单栏内容接口
+    interface Imenu {
+        title: string;
+        subtitle_1: string;
+        subtitle_2: string;
+    }
+    interface IMenuBase {
+        data: Array<Imenu>
+    }
+    // 菜单栏内容
+    let menuArray:IMenuBase = reactive({data: []})
+
+    function getHomeTopData(){
+        const { CrossBarArray, MenuArray, BarsImageArray, MenuGoodsArray } = HomeStore();
+        menuArray = MenuArray;
+        menuGoodsArray = MenuGoodsArray;
+        
+
+    }
+   
+
+    interface Ibrand {
+        image: string;
+        place: string;
+        name: string;
+        desc: string;
+    }
+    interface IbrandBase {
+        data: Array<Ibrand>
+    }
+    // 品牌数据
+    let brandArray: IbrandBase = reactive({data: []});
+
+    // 获取首页品牌
+    function getBrand(){
+        getBrandData().then(res => {
+            res.data.result.forEach((item: any) => {
+                let brandObj: Ibrand = {
+                    image: item.picture,
+                    place: item.place,
+                    name: item.name,
+                    desc: item.desc,
+                }
+                brandArray.data.push(brandObj)
+            })
+        })
+    }
+
+
+    interface ImenuGoodsBase {
+        data: Array<Array<ImenuGoods>>
+    }
+    interface ImenuGoods {
+        image: string;
+        title: string;
+        desc: string;
+        price: string;
+    }
+    // 菜单栏右侧弹窗商品数据内容
+    let menuGoodsArray: ImenuGoodsBase = reactive({data: []});
+
+    
+
+    interface IbannerBase {
+        data: Array<string>
+    }
+    // banner图片地址
+    let imageArray:IbannerBase = reactive({data: []});
+    
+
+     // 获取顶部banner
+     function getHomeBanner(){
+        getIndexBanner().then(res => {
+            let banner: Array<string> = [];
+            res.data.result.forEach((item: any) => {
+                banner.push(item.imgUrl)
+            })
+            imageArray.data = banner;
+        })
+    }
+
+    // 声明横栏弹出框数据接口
+    interface Ibars {
+        image: string;
+        title: string;
+    }
+    interface IBarsBase {
+        data: Array<Array<Ibars>>
+    }
+    let barsImageArray:IBarsBase = reactive({data: []})
+
 
 
     interface IGoodsInfo {
@@ -239,6 +370,18 @@
             })
         })
     }
+
+
+    let activeMenuLine:Ref<number> = ref(-1);
+    // 鼠标移入菜单栏列表，与之下标匹配项背景色修改
+    function menuLineMouseEnter(index: number){
+        activeMenuLine.value = index;
+    }
+
+    // 鼠标移出整体菜单栏
+    function menuBoxMouseOut(){
+        activeMenuLine.value = -1;
+    }
 </script>
 
 
@@ -319,5 +462,76 @@
     }
     .padB-30 {
         padding-bottom: 30px;
+    }
+
+    .swiperbox {
+        position: relative;
+    }
+    .coverbox {
+        width: 250px;
+        height: 500px;
+        position: absolute;
+        display: flex;
+        top: 0;
+        z-index: 98;
+    }
+    .menu {
+        width: 250px;
+        height: 500px;
+        background-color: rgba(0, 0, 0, .7);
+    }
+    .menu-line {
+        width: 250px;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 40px;
+        box-sizing: border-box;
+    }
+    .menu-line span {
+        color: #ffffff;
+        margin-right: 4px;
+    }
+    .menu-con {
+        width: 990px;
+        height: 500px;
+        background-color: rgba(256, 256, 256, .5);
+    }
+    .title-line {
+        width: 960px;
+        height: 82px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .title-line-title {
+        font-size: 20px;
+    }
+    .title-line-desc {
+        font-size: 16px;
+        color: #666666;
+    }
+    .good-box {
+        width: 960px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .good-box2 {
+        width: 960px;
+        height: 390px;
+        margin: 0 15px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .fs-16 {
+        font-size: 16px;
+    }
+    .fs-14 {
+        font-size: 14px;
     }
 </style>
