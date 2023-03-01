@@ -2,12 +2,12 @@
     <div class="cart">
         <crumbs :curmbsRouter="curmbsRouter"></crumbs>
         <div class="list">
-            <div class="head">
+            <div class="head bor-b">
                 <div class="temp temp-1">
-                    <div class="checkbox" :class="true ? 'check' : 'uncheck'">
-                        <span class="hook" v-show="true">√</span>
+                    <div class="checkbox" :class="false ? 'check' : 'uncheck'">
+                        <span class="hook" v-show="false">√</span>
                     </div>
-                    <span :class="true ? 'checkText' : 'uncheckText'">全选</span>
+                    <span :class="false ? 'checkText' : 'uncheckText'">全选</span>
                 </div>
                 <div class="temp fcc temp-2">
                     <span class="label">商品信息</span>
@@ -25,6 +25,7 @@
                     <span class="label">操作</span>
                 </div>
             </div>
+            <cartGoods></cartGoods>
         </div>
     </div>
 </template>
@@ -74,7 +75,7 @@
         flex-direction: row;
     }
     .temp {
-        height: 70px;
+        height: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -129,9 +130,22 @@
         font-size: 16px;
         color: #666666;
     }
+    .line {
+        width: 1240px;
+        height: 120px;
+        display: flex;
+        flex-direction: row;
+    }
     .fcc {
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .ac {
+        display: flex;
+        align-items: center;
+    }
+    .bor-b {
+        border-bottom: 1px solid #f5f5f5;
     }
 </style>
