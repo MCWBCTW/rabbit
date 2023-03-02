@@ -6,28 +6,55 @@
             </div>
         </div>
         <div class="temp ac temp-2">
-            <span class="label">商品信息</span>
+            
         </div>
         <div class="temp fcc temp-3">
-            <span class="label">单价</span>
+            <span class="unit-price">￥{{ unitPrice }}</span>
         </div>
         <div class="temp fcc temp-4">
-            <span class="label">数量</span>
+            <div class="count">
+                <div class="count_btn fcc bor-r" @click="countReduce">-</div>
+                <div class="count_input fcc">{{ num }}</div>
+                <div class="count_btn fcc bor-l" @click="countAdd">+</div>
+            </div>
         </div>
         <div class="temp fcc temp-4">
-            <span class="label">小计</span>
+            <span class="all-price">￥{{ allPrice }}</span>
         </div>
-        <div class="temp fcc temp-5">
-            <span class="label">操作</span>
+        <div class="temp jc temp-5">
+            <span class="operate-1">移入收藏夹</span>
+            <span class="operate-2">删除</span>
+            <span class="operate-1">找相似</span>
         </div>
     </div>
 </template>
 
 
 <script setup lang="ts">
+    import type { Ref, ComputedRef } from 'vue';
+
+    // 商品数量
+    let num: Ref<number> = ref(1);
+    // 商品单价
+    let unitPrice: Ref<number> = ref(19.8);
+    // 商品总价
+    let allPrice: ComputedRef<number> = computed(() => {
+        let res: number = num.value * unitPrice.value
+        res = Number(res.toFixed(2))
+        return res
+    })
     
-    
-    
+    // 减少数量
+    function countReduce(){
+        if(num.value > 1){
+            num.value -= 1;
+        }
+    }
+
+    // 添加数量
+    function countAdd(){
+        num.value += 1;
+    }
 </script>
 
 
@@ -84,15 +111,48 @@
     .temp-5 {
         width: 140px;
     }
-    .label {
-        font-size: 16px;
+    .unit-price {
+        font-size: 14px;
         color: #666666;
+    }
+    .all-price {
+        font-size: 14px;
+        color: #cf4444;
     }
     .line {
         width: 1240px;
         height: 120px;
         display: flex;
         flex-direction: row;
+    }
+    .count {
+        width: 120px;
+        height: 30px;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid #e4e4e4;
+        box-sizing: border-box;
+    }
+    .count_btn {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        background-color: #f8f8f8;
+    }
+    .count_input {
+        width: 60px;
+        height: 30px;
+        color: #666666;
+    }
+    .operate-1 {
+        font-size: 14px;
+        color: #666666;
+        line-height: 24px;
+    }
+    .operate-2 {
+        font-size: 14px;
+        color: #27ba9b;;
+        line-height: 24px;
     }
     .fcc {
         display: flex;
@@ -103,7 +163,19 @@
         display: flex;
         align-items: center;
     }
+    .jc {
+       display: flex; 
+       flex-direction: column;
+       align-items: center;
+       justify-content: center;
+    }
     .bor-b {
         border-bottom: 1px solid #f5f5f5;
+    }
+    .bor-r {
+        border-right: 1px solid #e4e4e4;
+    }
+    .bor-l {
+        border-left: 1px solid #e4e4e4;
     }
 </style>

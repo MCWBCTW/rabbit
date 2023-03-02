@@ -9,11 +9,9 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BigGoods: typeof import('./src/components/custom/bigGoods.vue')['default']
     BottomInfo: typeof import('./src/components/custom/bottomInfo.vue')['default']
-    Cartgoods: typeof import('./src/components/cart/cartgoods.vue')['default']
     CartGoods: typeof import('./src/components/cart/cartGoods.vue')['default']
     Crumbs: typeof import('./src/components/custom/crumbs.vue')['default']
     DescBars: typeof import('./src/components/custom/descBars.vue')['default']
-    Goods: typeof import('./src/components/cart/goods.vue')['default']
     HomeGoods: typeof import('./src/components/home/homeGoods.vue')['default']
     HomeSpecial: typeof import('./src/components/home/homeSpecial.vue')['default']
     MiniBrand: typeof import('./src/components/custom/miniBrand.vue')['default']
