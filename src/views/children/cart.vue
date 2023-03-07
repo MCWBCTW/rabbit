@@ -25,14 +25,18 @@
                     <span class="label">操作</span>
                 </div>
             </div>
-            <cartGoods></cartGoods>
+            <cartGoods v-for="(item, o) in cartGoodsData" :key="o" :goods="item" v-model:num="item.num"></cartGoods>
         </div>
     </div>
 </template>
 
 
 <script setup lang="ts">
-    
+
+
+
+
+    // 面包屑 规范接口
     interface Icurmbs {
         title: string;
         router: string;
@@ -50,7 +54,71 @@
         jumpFlag: false
     }]
     
+    // 定义商品数据接口
+    interface Igoods {
+        title: string; // 商品名称
+        num: number; // 数量
+        unitPrice: number; // 单价
+        picture: string; // 图片
+        types: Array<IgoodsTypes>; // 商品的类目
+    }
+    // 商品类目数据接口
+    interface IgoodsTypes {
+        type: number; // 选中的类型
+        select: Array<Itypes>; // 待选择的类型数据
+    }
+    // 商品类目待选择数据接口
+    interface Itypes {
+        type: number;
+        desc: string;
+        picture: string;
+    }
+    // 购物车中的商品
+    let cartGoodsData: Array<Igoods> = reactive([]);
+
+
+    getCartGoods();
     
+    // 获取购物车的商品
+    function getCartGoods(){
+        cartGoodsData.push({
+            title: '日式和风简约无盖垃圾桶11L',
+            num: 1,
+            unitPrice: 19.8,
+            picture: '',
+            types: [{
+                type: 1,
+                select: [{
+                    type: 1,
+                    desc: '白色',
+                    picture: '',
+                },{
+                    type: 2,
+                    desc: '黑色',
+                    picture: '',
+                }]
+            }],
+        })
+        cartGoodsData.push({
+            title: '日式和风简约无盖垃圾桶11L',
+            num: 1,
+            unitPrice: 19.8,
+            picture: '',
+            types: [{
+                type: 1,
+                select: [{
+                    type: 1,
+                    desc: '白色',
+                    picture: '',
+                },{
+                    type: 2,
+                    desc: '黑色',
+                    picture: '',
+                }]
+            }],
+        })
+    }
+
 </script>
 
 

@@ -9,13 +9,13 @@
             
         </div>
         <div class="temp fcc temp-3">
-            <span class="unit-price">￥{{ unitPrice }}</span>
+            <span class="unit-price">￥{{ goods.unitPrice }}</span>
         </div>
         <div class="temp fcc temp-4">
             <div class="count">
-                <div class="count_btn fcc bor-r" @click="countReduce">-</div>
-                <div class="count_input fcc">{{ num }}</div>
-                <div class="count_btn fcc bor-l" @click="countAdd">+</div>
+                <div class="count_btn fcc bor-r" @click="editNum(-1)">-</div>
+                <div class="count_input fcc">{{ goods.num }}</div>
+                <div class="count_btn fcc bor-l" @click="editNum(1)">+</div>
             </div>
         </div>
         <div class="temp fcc temp-4">
@@ -33,27 +33,40 @@
 <script setup lang="ts">
     import type { Ref, ComputedRef } from 'vue';
 
-    // 商品数量
-    let num: Ref<number> = ref(1);
-    // 商品单价
-    let unitPrice: Ref<number> = ref(19.8);
+
+    const props = defineProps({
+        goods: {
+            type: Object,
+            default: () => {}
+        },
+        index: {
+            type: Number,
+            default: 0,
+        },
+        num: {
+            type: Number,
+            default: 0,
+        }
+    })
+
+    const emit = defineEmits(['update:num'])
+
     // 商品总价
     let allPrice: ComputedRef<number> = computed(() => {
-        let res: number = num.value * unitPrice.value
+        let res: number = props.goods.num * props.goods.unitPrice
         res = Number(res.toFixed(2))
         return res
     })
     
     // 减少数量
-    function countReduce(){
-        if(num.value > 1){
-            num.value -= 1;
+    function editNum(num: number){
+        if(num < 0 && props.goods.num == 1){
+            // 数量为1时不能减少
+            return
         }
-    }
-
-    // 添加数量
-    function countAdd(){
-        num.value += 1;
+        let originNum: number = props.num;
+        originNum += num
+        emit('update:num', originNum)
     }
 </script>
 
@@ -148,11 +161,13 @@
         font-size: 14px;
         color: #666666;
         line-height: 24px;
+        cursor: pointer;
     }
     .operate-2 {
         font-size: 14px;
         color: #27ba9b;;
         line-height: 24px;
+        cursor: pointer;
     }
     .fcc {
         display: flex;
