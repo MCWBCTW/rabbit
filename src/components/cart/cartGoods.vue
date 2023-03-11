@@ -1,12 +1,19 @@
 <template>
     <div class="line">
         <div class="temp temp-1">
-            <div class="checkbox" :class="false ? 'check' : 'uncheck'">
-                <span class="hook" v-show="false">√</span>
+            <div class="checkbox" :class="check ? 'check' : 'uncheck'" @click="checkBox">
+                <span class="hook" v-show="check">√</span>
             </div>
         </div>
         <div class="temp ac temp-2">
-            
+            <div class="image"></div>
+            <div class="info">
+                <p class="goods-title">{{ goods.title }}</p>
+                <div class="type-line">
+                    <p class="type-desc" v-for="(type, o) in goods.types" :key="o">{{ type.name }}：{{  }}</p>
+                    <span class="iconfont icon-xiangyou type-icon"></span>
+                </div>
+            </div>
         </div>
         <div class="temp fcc temp-3">
             <span class="unit-price">￥{{ goods.unitPrice }}</span>
@@ -35,26 +42,34 @@
 
 
     const props = defineProps({
+        // 当前商品数据
         goods: {
             type: Object,
             default: () => {}
         },
+        // 当前商品所属下标
         index: {
             type: Number,
             default: 0,
         },
+        // 当前商品数量
         num: {
             type: Number,
             default: 0,
-        }
+        },
+        // 当前商品是否勾选
+        check: {
+            type: Boolean,
+            default: 0,
+        },
     })
 
-    const emit = defineEmits(['update:num'])
+    const emit = defineEmits(['update:num', 'update:check', 'updataInfo']);
 
     // 商品总价
     let allPrice: ComputedRef<number> = computed(() => {
-        let res: number = props.goods.num * props.goods.unitPrice
-        res = Number(res.toFixed(2))
+        let res: number = props.goods.num * props.goods.unitPrice;
+        res = Number(res.toFixed(2));
         return res
     })
     
@@ -65,8 +80,15 @@
             return
         }
         let originNum: number = props.num;
-        originNum += num
-        emit('update:num', originNum)
+        originNum += num;
+        emit('update:num', originNum);
+    }
+
+    // 勾选商品
+    function checkBox(){
+        let originCheck: boolean = props.check;
+        originCheck = !originCheck;
+        emit('update:check', originCheck);
     }
 </script>
 
@@ -90,6 +112,7 @@
         display: flex;
         justify-content: center;
         margin-right: 3px;
+        cursor: pointer;
     }
     .hook {
         color: #27ba9b;
@@ -114,6 +137,46 @@
     }
     .temp-2 {
         width: 400px;
+    }
+    .image {
+        width: 100px;
+        height: 100px;
+        background-color: red;
+    }
+    .info {
+        width: 280px;
+        height: 62px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .goods-title {
+        width: 270px;
+        height: 30px;
+        line-height: 30px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 16px;
+        color: #666666;
+    }
+    .type-line {
+        height: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid #f5f5f5;
+    }
+    .type-desc {
+        font-size: 14px;
+        color: #999999;
+    }
+    .type-icon {
+        font-size: 12px;
+        color: #999999;
+        transform: rotate(90deg);
     }
     .temp-3 {
         width: 220px;

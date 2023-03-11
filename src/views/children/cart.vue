@@ -4,10 +4,10 @@
         <div class="list">
             <div class="head bor-b">
                 <div class="temp temp-1">
-                    <div class="checkbox" :class="false ? 'check' : 'uncheck'">
-                        <span class="hook" v-show="false">√</span>
+                    <div class="checkbox" :class="cartCheckAll ? 'check' : 'uncheck'" @click="checkAll">
+                        <span class="hook" v-show="cartCheckAll">√</span>
                     </div>
-                    <span :class="false ? 'checkText' : 'uncheckText'">全选</span>
+                    <span class="checkTextStyle" :class="cartCheckAll ? 'checkText' : 'uncheckText'" @click="checkAll">全选</span>
                 </div>
                 <div class="temp fcc temp-2">
                     <span class="label">商品信息</span>
@@ -25,7 +25,25 @@
                     <span class="label">操作</span>
                 </div>
             </div>
-            <cartGoods v-for="(item, o) in cartGoodsData" :key="o" :goods="item" v-model:num="item.num"></cartGoods>
+            <cartGoods v-for="(item, o) in cartGoodsData" v-model:check="cartCheckFlagArray[o]" :key="o" :goods="item" v-model:num="item.num" @updataInfo="countCartInfo"></cartGoods>
+        </div>
+        <div class="census">
+            <div class="census-left">
+                <div class="checkbox" :class="cartCheckAll ? 'check' : 'uncheck'" @click="checkAll">
+                    <span class="hook" v-show="cartCheckAll">√</span>
+                </div>
+                <span class="checkTextStyle" :class="cartCheckAll ? 'checkText' : 'uncheckText'" @click="checkAll">全选</span>
+                <span class="census-left-btn">删除商品</span>
+                <span class="census-left-btn">移入收藏夹</span>
+                <span class="census-left-btn">清空失效商品</span>
+            </div>
+            <div class="census-right">
+                <span class="census-right-text">共{{ cartGoodsTotalAmount }}件商品，已选择{{ checkGoodsTotalAmount }}件，商品合计：</span>
+                <span class="census-right-price">￥{{ checkGoodsTotalPrice }}</span>
+                <div class="census-right-btn">
+                    <span class="census-right-btn-text">下单结算</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -33,8 +51,7 @@
 
 <script setup lang="ts">
 
-
-
+    import type { Ref } from 'vue'
 
     // 面包屑 规范接口
     interface Icurmbs {
@@ -65,6 +82,7 @@
     // 商品类目数据接口
     interface IgoodsTypes {
         type: number; // 选中的类型
+        name: string; // 类型名称
         select: Array<Itypes>; // 待选择的类型数据
     }
     // 商品类目待选择数据接口
@@ -75,6 +93,54 @@
     }
     // 购物车中的商品
     let cartGoodsData: Array<Igoods> = reactive([]);
+
+    // 购物车中商品的勾选状态
+    let cartCheckFlagArray: Array<boolean> = reactive([]);
+    // 购物车商品是否全部勾选
+    let cartCheckAll: Ref<boolean> = ref(false);
+    
+
+    // 勾选的商品总数
+    let checkGoodsTotalAmount: Ref<number> = ref(0);
+    // 购物车勾选商品总价
+    let checkGoodsTotalPrice: Ref<number> = ref(0);
+    // 购物车商品总数
+    let cartGoodsTotalAmount: Ref<number> = ref(0);
+    watch(cartCheckFlagArray, (newV) => {
+        // 校验购物车中商品是否是全部勾选
+        cartCheckAll.value = !newV.includes(false);
+
+        countCartInfo(); // 计算购物车勾选总数
+        
+    })
+    
+    // 勾选全部商品
+    function checkAll(){
+        cartCheckAll.value = !cartCheckAll.value;
+        for(let i = 0; i < cartCheckFlagArray.length; i++){
+            cartCheckFlagArray[i] = cartCheckAll.value;
+        }
+    }
+
+    function countCartInfo(){
+        let totalAmount = 0; // 勾选商品总数
+        let totalPrice = 0; // 勾选商品总价
+        let cartTotalAmount = 0; // 购物车商品总数
+        
+        cartGoodsData.forEach((item, index) => {
+            if(cartCheckFlagArray[index]){
+                // 当前商品勾选
+                totalAmount += item.num;
+                totalPrice += Number((item.num * item.unitPrice).toFixed(2))
+            }
+            cartTotalAmount += item.num;
+        })
+        checkGoodsTotalAmount.value = totalAmount;
+        checkGoodsTotalPrice.value = totalPrice;
+        cartGoodsTotalAmount.value = cartTotalAmount;
+    }
+
+
 
 
     getCartGoods();
@@ -88,6 +154,7 @@
             picture: '',
             types: [{
                 type: 1,
+                name: '颜色',
                 select: [{
                     type: 1,
                     desc: '白色',
@@ -106,6 +173,7 @@
             picture: '',
             types: [{
                 type: 1,
+                name: '颜色',
                 select: [{
                     type: 1,
                     desc: '白色',
@@ -117,6 +185,8 @@
                 }]
             }],
         })
+        cartCheckFlagArray.push(false)
+        cartCheckFlagArray.push(false)
     }
 
 </script>
@@ -160,6 +230,7 @@
         display: flex;
         justify-content: center;
         margin-right: 3px;
+        cursor: pointer;
     }
     .hook {
         color: #27ba9b;
@@ -172,15 +243,16 @@
     .uncheck {
         border: 1px solid #999999;
     }
-    .checkText {
-        color: #27ba9b;
+    .checkTextStyle {
         font-size: 16px;
         font-weight: 400;
+        cursor: pointer;
+    }
+    .checkText {
+        color: #27ba9b;
     }
     .uncheckText {
         color: #999999;
-        font-size: 16px;
-        font-weight: 400;
     }
     .temp-2 {
         width: 400px;
@@ -203,6 +275,53 @@
         height: 120px;
         display: flex;
         flex-direction: row;
+    }
+    .census {
+        width: 1240px;
+        height: 80px;
+        margin-top: 20px;
+        padding: 0 30px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #ffffff;
+    }
+    .census-left {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .census-left-btn {
+        cursor: pointer;
+        margin-left: 20px;
+        color: #333333;
+    }
+    .census-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .census-right-text {
+        color: #333333;
+    }
+    .census-right-price {
+        color: #cf4444;
+    }
+    .census-right-btn {
+        width: 180px;
+        height: 50px;
+        border-radius: 4px;
+        background-color: #27ba9b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 20px;
+        cursor: pointer;
+    }
+    .census-right-btn-text {
+        color: #ffffff;
     }
     .fcc {
         display: flex;

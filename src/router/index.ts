@@ -8,10 +8,12 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
+                name: 'home',
                 component: () => import('../views/children/home.vue'),
             },
             {
                 path: '/cart',
+                name: 'cart',
                 component: () => import('../views/children/cart.vue'),
             }
         ]
