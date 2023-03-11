@@ -25,7 +25,8 @@
                     <span class="label">操作</span>
                 </div>
             </div>
-            <cartGoods v-for="(item, o) in cartGoodsData" v-model:check="cartCheckFlagArray[o]" :key="o" :goods="item" v-model:num="item.num" @updataInfo="countCartInfo"></cartGoods>
+            <cartGoods v-for="(item, o) in cartGoodsData" v-model:check="cartCheckFlagArray[o]" :key="o"
+                :goods="item" v-model:num="item.num" @updataInfo="countCartInfo" @deleteGoods="deleteGoods" @collectGoods="collectGoods"></cartGoods>
         </div>
         <div class="census">
             <div class="census-left">
@@ -33,9 +34,9 @@
                     <span class="hook" v-show="cartCheckAll">√</span>
                 </div>
                 <span class="checkTextStyle" :class="cartCheckAll ? 'checkText' : 'uncheckText'" @click="checkAll">全选</span>
-                <span class="census-left-btn">删除商品</span>
-                <span class="census-left-btn">移入收藏夹</span>
-                <span class="census-left-btn">清空失效商品</span>
+                <span class="census-left-btn" @click="deleteGoods()">删除商品</span>
+                <span class="census-left-btn" @click="collectGoods()">移入收藏夹</span>
+                <span class="census-left-btn" @click="emptyGoods()">清空失效商品</span>
             </div>
             <div class="census-right">
                 <span class="census-right-text">共{{ cartGoodsTotalAmount }}件商品，已选择{{ checkGoodsTotalAmount }}件，商品合计：</span>
@@ -77,6 +78,7 @@
         num: number; // 数量
         unitPrice: number; // 单价
         picture: string; // 图片
+        lapse: boolean; // 是否失效
         types: Array<IgoodsTypes>; // 商品的类目
     }
     // 商品类目数据接口
@@ -152,6 +154,7 @@
             num: 1,
             unitPrice: 19.8,
             picture: '',
+            lapse: false,
             types: [{
                 type: 1,
                 name: '颜色',
@@ -171,6 +174,7 @@
             num: 1,
             unitPrice: 19.8,
             picture: '',
+            lapse: false,
             types: [{
                 type: 1,
                 name: '颜色',
@@ -189,6 +193,50 @@
         cartCheckFlagArray.push(false)
     }
 
+
+
+
+
+
+    // 删除指定商品
+    /**
+     * 
+     * @param index 存在则为子组件传递而来，仅删除对应下标的商品；反之为本页面删除多个商品按钮
+     */
+    function deleteGoods(index?:number){
+        if(index == undefined){
+            // 多个
+            let newFlag: Array<boolean> = []; // 新勾选状态数组
+            let newGoods: Array<Igoods> = []; // 新购物车数据
+            cartCheckFlagArray.forEach((flag, index) => {
+                if(!flag){
+                    // 当前下标商品未勾选
+                    newGoods.push(cartGoodsData[index])
+                }
+                newFlag.push(false); // 勾选的商品都删除，留下的均未勾选
+            })
+            cartGoodsData = JSON.parse(JSON.stringify(newGoods));
+            cartCheckFlagArray = JSON.parse(JSON.stringify(newFlag));
+        } else {
+            // 子组件传递，仅删除一个
+            cartGoodsData.splice(index, 1);
+            cartCheckFlagArray.splice(index, 1);
+        }
+    }
+
+    // 加入收藏夹，index 同上
+    function collectGoods(index?:number){
+        if(index == undefined){
+            // 多个
+        }
+    }
+
+    // 清空失效商品，index 同上
+    function emptyGoods(index?:number){
+        if(index == undefined){
+            // 多个
+        }
+    }
 </script>
 
 

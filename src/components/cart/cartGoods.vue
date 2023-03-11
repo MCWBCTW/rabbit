@@ -29,9 +29,9 @@
             <span class="all-price">￥{{ allPrice }}</span>
         </div>
         <div class="temp jc temp-5">
-            <span class="operate-1">移入收藏夹</span>
-            <span class="operate-2">删除</span>
-            <span class="operate-1">找相似</span>
+            <span class="operate-1" @click="collectGoods">移入收藏夹</span>
+            <span class="operate-2" @click="deleteGoods">删除</span>
+            <span class="operate-1" @click="findResemble">找相似</span>
         </div>
     </div>
 </template>
@@ -64,7 +64,7 @@
         },
     })
 
-    const emit = defineEmits(['update:num', 'update:check', 'updataInfo']);
+    const emit = defineEmits(['update:num', 'update:check', 'updataInfo', 'deleteGoods', 'collectGoods']);
 
     // 商品总价
     let allPrice: ComputedRef<number> = computed(() => {
@@ -89,6 +89,21 @@
         let originCheck: boolean = props.check;
         originCheck = !originCheck;
         emit('update:check', originCheck);
+    }
+
+    // 删除当前商品
+    function deleteGoods(){
+        emit('deleteGoods', props.index);
+    }
+
+    // 加入收藏夹
+    function collectGoods(){
+        emit('collectGoods', props.index);
+    }
+
+    // 找相似
+    function findResemble(){
+        
     }
 </script>
 
