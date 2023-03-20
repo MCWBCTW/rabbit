@@ -82,6 +82,7 @@
         let originNum: number = props.num;
         originNum += num;
         emit('update:num', originNum);
+        emit('updataInfo');
     }
 
     // 勾选商品

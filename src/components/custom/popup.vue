@@ -1,23 +1,36 @@
 <template>
-    <div class="pop" @click="bgClick" v-if="show" @mousewheel.stop>
-        <div class="pop-box" style="height: 200px;width: 200px;overflow: scroll;">
+    <div class="pop" @click="bgClick" v-if="show" @mousewheel.stop 
+        :style="{height: `${viewHeight}px`, width: `${viewWidth}px`, backgroundColor: `${isMask ? 'rgba(0, 0, 0, .5)' : 'transparent'}`}">
             <slot></slot>
-        </div>
     </div>
 </template>
 
 
 <script setup lang="ts">
-    import { Ref } from '@vue/reactivity';
     import { $emit } from '../../utils/tools'
+
+    // 浏览器视口宽度
+    const viewWidth: number = window.innerWidth;
+    // 浏览器视口高度
+    const viewHeight: number = window.innerHeight;
+
+
+
+
     const props = defineProps({
+        // 弹窗显示状态
         show: {
             type: Boolean,
             default: false
         },
+        // 点击背景是否关闭弹窗
         bgClose: {
             type: Boolean,
-            default: false
+            default: true
+        },
+        isMask: {
+            type: Boolean,
+            default: true
         }
     })
     watch(
@@ -26,11 +39,11 @@
             // 显示弹窗时，禁止底层滚动
             if(newV){
                 // 显示弹窗
-                document.body.style.overflow = "hidden"
+                // document.body.style.overflow = "hidden"
                 document.addEventListener("mousewheel", (e) => { e.preventDefault() })
             } else {
                 // 关闭弹窗
-                document.body.style.overflow = ""
+                // document.body.style.overflow = ""
                 document.removeEventListener("mousewheel", (e) => { e.preventDefault() })
             }
         }
@@ -45,7 +58,7 @@
     }
 
     function closePopup(){
-        $emit('PopupToApp', false)
+        // $emit('PopupToApp', false)
     }
 
 </script>
@@ -53,18 +66,21 @@
 
 <style scoped>
     .pop {
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, .5);
         position: fixed;
         top: 0;
         left: 0;
+        bottom: 0;
+        right: 0;
         display: flex;
-        align-items: center;
         justify-content: center;
         z-index: 999;
+        overflow: scroll;
+        box-sizing: border-box;
+
+        padding-top: 15vh;
+
     }
-    .pop-box::-webkit-scrollbar {
+    .pop::-webkit-scrollbar {
         width: 0 !important;
         height: 0 !important;
     }

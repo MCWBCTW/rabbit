@@ -100,6 +100,18 @@ export function decryptObj(origin: any){
     return result
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 // 存放全局监听函数的对象，健 为监听函数的名称，值 为所触发的函数体
 const totalEvent: any = {};
 

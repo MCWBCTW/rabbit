@@ -41,11 +41,16 @@
             <div class="census-right">
                 <span class="census-right-text">共{{ cartGoodsTotalAmount }}件商品，已选择{{ checkGoodsTotalAmount }}件，商品合计：</span>
                 <span class="census-right-price">￥{{ checkGoodsTotalPrice }}</span>
-                <div class="census-right-btn">
+                <div class="census-right-btn" @click="placeAnOrder">
                     <span class="census-right-btn-text">下单结算</span>
                 </div>
             </div>
         </div>
+        <popup v-model:show="show">
+            <div style="display: flex;flex-direction: column;">
+                <span style="background-color: #ffffff;" v-for="item in 30" :key="item">{{ item }}</span>
+            </div>
+        </popup>
     </div>
 </template>
 
@@ -58,7 +63,7 @@
     interface Icurmbs {
         title: string;
         router: string;
-        jumpFlag: boolean
+        jumpFlag: boolean;
     }
 
     // 面包屑 内容配置
@@ -124,6 +129,7 @@
         }
     }
 
+    // 重新计算购物车下方总数信息
     function countCartInfo(){
         let totalAmount = 0; // 勾选商品总数
         let totalPrice = 0; // 勾选商品总价
@@ -138,7 +144,7 @@
             cartTotalAmount += item.num;
         })
         checkGoodsTotalAmount.value = totalAmount;
-        checkGoodsTotalPrice.value = totalPrice;
+        checkGoodsTotalPrice.value = Number((totalPrice).toFixed(2));
         cartGoodsTotalAmount.value = cartTotalAmount;
     }
 
@@ -236,6 +242,14 @@
         if(index == undefined){
             // 多个
         }
+    }
+
+
+    let show: Ref<boolean> = ref(false)
+
+    // 下单结算
+    function placeAnOrder(){
+        show.value = !show.value;
     }
 </script>
 
