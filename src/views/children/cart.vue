@@ -46,11 +46,6 @@
                 </div>
             </div>
         </div>
-        <popup v-model:show="show">
-            <div style="display: flex;flex-direction: column;">
-                <span style="background-color: #ffffff;" v-for="item in 30" :key="item">{{ item }}</span>
-            </div>
-        </popup>
     </div>
 </template>
 
@@ -245,11 +240,9 @@
     }
 
 
-    let show: Ref<boolean> = ref(false)
-
     // 下单结算
     function placeAnOrder(){
-        show.value = !show.value;
+        
     }
 </script>
 
@@ -342,6 +335,7 @@
         width: 1240px;
         height: 80px;
         margin-top: 20px;
+        margin-bottom: 20px;
         padding: 0 30px;
         box-sizing: border-box;
         display: flex;

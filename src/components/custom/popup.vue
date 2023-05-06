@@ -39,11 +39,11 @@
             // 显示弹窗时，禁止底层滚动
             if(newV){
                 // 显示弹窗
-                // document.body.style.overflow = "hidden"
+                document.body.style.overflow = "hidden"
                 document.addEventListener("mousewheel", (e) => { e.preventDefault() })
             } else {
                 // 关闭弹窗
-                // document.body.style.overflow = ""
+                document.body.style.overflow = ""
                 document.removeEventListener("mousewheel", (e) => { e.preventDefault() })
             }
         }
